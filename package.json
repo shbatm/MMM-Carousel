@@ -4,7 +4,9 @@
   "description": "Displays a single magic mirror module at a time or in groups of slides, rotating through the list of configured modules in a carousel-like fashion.",
   "main": "MMM-Carousel.js",
   "scripts": {
-    "test": "grunt"
+    "test": "grunt",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -32,6 +34,8 @@
     "grunt": "latest",
     "grunt-jslint": "latest",
     "load-grunt-config": "latest",
-    "grunt-contrib-nodeunit": "^1.0.0"
-  }
+    "grunt-contrib-nodeunit": "^1.0.0",
+    "snyk": "^1.83.0"
+  },
+  "snyk": true
 }
