@@ -1,14 +1,14 @@
 {
-  "name": "mmm-carousel",
+  "name": "mmm-carousel2",
   "version": "0.2.5-dev",
   "description": "Displays a single magic mirror module at a time or in groups of slides, rotating through the list of configured modules in a carousel-like fashion.",
-  "main": "MMM-Carousel.js",
+  "main": "MMM-Carousel2.js",
   "scripts": {
     "test": "grunt"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shbatm/MMM-Carousel.git"
+    "url": "https://github.com/lpage30/MMM-Carousel2.git"
   },
   "keywords": [
     "magic",
@@ -22,12 +22,13 @@
     "pages"
   ],
   "author": "Barnaby Colby",
-  "contributor": "shbatm",
+  "contributor1st": "shbatm",
+  "contributor2nd": "lpage30",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shbatm/MMM-Carousel/issues"
+    "url": "https://github.com/lpage30/MMM-Carousel2/issues"
   },
-  "homepage": "https://github.com/shbatm/MMM-Carousel#readme",
+  "homepage": "https://github.com/lpage30/MMM-Carousel2#readme",
   "dependencies": {
     "grunt": "latest",
     "grunt-jslint": "latest",

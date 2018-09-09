@@ -2,7 +2,7 @@
 /* jshint esversion:6 */
 (function () {
 
-    Module.register('MMM-Carousel', {
+    Module.register('MMM-Carousel2', {
         defaults: {
             transitionInterval: 10000,
             slideTransitionSpeed: 1500,
@@ -271,7 +271,7 @@
         },
 
         getStyles: function() {
-            return ["MMM-Carousel.css"];
+            return ["MMM-Carousel2.css"];
         },
 
         /* getDom()

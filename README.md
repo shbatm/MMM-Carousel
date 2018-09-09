@@ -1,7 +1,9 @@
-# MMM-Carousel w/ Slide Navigation
+# MMM-Carousel w/ Slide Navigation 2
 > This is an extension to the [MagicMirror](https://github.com/MichMich/MagicMirror) project, allowing the modules to be displayed in a rotating carousel instead of displaying all of them at once.
-> This version of the module was forked from [barnabycolby's MMM-Carousel](https://github.com/barnabycolby/MMM-Carousel).
+> The parent version of the module was forked from [barnabycolby's MMM-Carousel](https://github.com/barnabycolby/MMM-Carousel).
 >  
+> This version of the module was forked from [shbatm's MMM-Carousel](https://github.com/shbatm/MMM-Carousel)
+> This version differs from that in that it ensures the page-selection/navigation box is transparent; not a big black box.
 >    There are three modes available:
 * `'global'` - All modules not cited in the `ignoreModules` config are rotated, displaying only one at a time for the duration of `transitionInterval`.  This is particularly useful on small screens where there may not be enough space to display several components at once. 
 * `'positional'` - Modules are grouped by `position` setting and rotated within a position except for modules listed in that position's `ignoreModules`, an `overrideTransitionInterval` can also be set to rotated different position at different speeds.
