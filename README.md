@@ -23,7 +23,7 @@ Run these commands at the root of your magic mirror install.
 
 ```shell
 cd modules
-git clone https://github.com/shbatm/MMM-Carousel
+git clone https://github.com/acimail01/MMM-Carousel.git
 ```
 
 ## Using the module
@@ -33,7 +33,7 @@ var config = {
     modules: [
         {
             module: 'MMM-Carousel',
-            position: 'bottom_bar',  // Only required to show navigation
+            position: 'bottom_bar',  // Required to draw in position
             config: {
                 // See below for configurable options
             }
@@ -271,4 +271,71 @@ You can navigate to different slides or transition points manually from other mo
 
 ```shell
 curl -X GET http://magicmirrorip:8080/api/module/carousel/action
+```
+
+
+#### Example1 - Recipe for MMM-AssistantMk2
+```javascript
+var recipe = {
+   transcriptionHook: {
+      "MY_COMMAND_06": {
+         pattern: "change mode",
+         command: "MY_COMMAND_06_01"
+      },
+   },
+   command: {
+      "MY_COMMAND_06_01": {
+         notificationExec: {
+            notification: "CAROUSEL_TOGGLE_SLIDE_MODE"
+         }
+      },
+   },
+}
+
+exports.recipe = recipe // Don't remove this line.
+```
+
+#### Example2 - Recipe for MMM-AssistantMk2
+```javascript
+var recipe = {
+   transcriptionHook: {
+      "MY_COMMAND_08": {
+         pattern: "start carousel",
+         command: "MY_COMMAND_08_01"
+      },
+   },
+   command: {
+      "MY_COMMAND_08_01": {
+         notificationExec: {
+            notification: "CAROUSEL_START_SLIDE",
+         }
+      },
+   },
+}
+
+exports.recipe = recipe // Don't remove this line.
+```
+
+#### Example3 - Recipe for MMM-AssistantMk2
+```javascript
+var recipe = {
+   transcriptionHook: {
+      "MY_COMMAND_07": {
+         pattern: "set time to (( |\\d+)+)",
+         command: "MY_COMMAND_07_01"
+      },
+   },
+   command: {
+      "MY_COMMAND_07_01": {
+         notificationExec: {
+            notification: "CAROUSEL_CHANGE_SLIDE_INTERVAL_TIME",
+            payload: (pattern) => { 
+               return  pattern[1];
+            }
+         }
+      },
+   },
+}
+
+exports.recipe = recipe // Don't remove this line.
 ```

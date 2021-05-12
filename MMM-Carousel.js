@@ -17,6 +17,8 @@ Module.register('MMM-Carousel', {
         bottom_center: { enabled: false, ignoreModules: [], overrideTransitionInterval: 10000 },
         bottom_right: { enabled: false, ignoreModules: [], overrideTransitionInterval: 10000 },
         bottom_bar: { enabled: false, ignoreModules: [], overrideTransitionInterval: 10000 },
+        fullscreen_above: { enabled: false, ignoreModules: [], overrideTransitionInterval: 10000 },
+        fullscreen_below: { enabled: false, ignoreModules: [], overrideTransitionInterval: 10000 },
         slides: [
             []
         ],
@@ -57,7 +59,7 @@ Module.register('MMM-Carousel', {
     },
 
     notificationReceived: function(notification, payload, sender) {
-        var position, positions = ['top_bar', 'bottom_bar', 'top_left', 'bottom_left', 'top_center', 'bottom_center', 'top_right', 'bottom_right', 'upper_third', 'middle_center', 'lower_third'];
+        var position, positions = ['top_bar', 'bottom_bar', 'top_left', 'bottom_left', 'top_center', 'bottom_center', 'top_right', 'bottom_right', 'upper_third', 'middle_center', 'lower_third','fullscreen_above','fullscreen_below'];
         if (notification === 'MODULE_DOM_CREATED') {
             // Register Key Handler
             if (this.config.keyBindings.enabled &&
@@ -174,16 +176,22 @@ Module.register('MMM-Carousel', {
     },
 
     moduleTransition: function(goToIndex = -1, goDirection = 0, goToSlide = undefined) {
-        var i, resetCurrentIndex = this.length;
+        var i, noChange = false, resetCurrentIndex = this.length;
         if (this.slides !== undefined) {
             resetCurrentIndex = Object.keys(this.slides).length;
         }
 
         // Update the current index
         if (goToSlide) {
+            console.log("In goToSlide, current slide index" + this.currentIndex);
             let slide = Object.keys(this.slides).find((s, i) => {
                 if (goToSlide === s) {
-                    this.currentIndex = i;
+                    if (i == this.currentIndex) {
+                        console.log("No change, requested slide is the same");
+                        noChange = true;
+                    } else {
+                        this.currentIndex = i;
+                    }
                     return true;
                 }
                 return false;
@@ -201,9 +209,20 @@ Module.register('MMM-Carousel', {
                 this.currentIndex = resetCurrentIndex - 1; // Went too far backwards, wrap-around to end
             }
         } else if (goToIndex >= 0 && goToIndex < resetCurrentIndex) {
-            this.currentIndex = goToIndex; // Go to a specific slide if in range
+            
+            if (goToIndex == this.currentIndex) {
+                console.log("No change, requested slide is the same");
+                noChange = true;
+            }
+            else {
+                this.currentIndex = goToIndex; // Go to a specific slide if in range
+            }
         }
-
+        
+        // Some modules like MMM-RTSPStream get into an odd state if you enable them when already enabled
+        console.log(" No change value:" + noChange);
+        if (noChange == true) {return}
+        
         /* selectWrapper(position)
          * Select the wrapper dom object for a specific position.
          *
@@ -223,7 +242,7 @@ Module.register('MMM-Carousel', {
         for (i = 0; i < this.length; i += 1) {
             // There is currently no easy way to discover whether a module is ALREADY shown/hidden
             // In testing, calling show/hide twice seems to cause no issues
-            //console.log("Processing " + this[i].name);
+            console.log("Processing " + this[i].name);
             if ((this.slides === undefined) && (i === this.currentIndex)) {
                 this[i].show(this.slideTransitionSpeed, { lockString: "mmmc" });
             } else if (this.slides !== undefined) {
@@ -343,9 +362,10 @@ Module.register('MMM-Carousel', {
             };
         }
 
+        var div = document.createElement("div");
+        
         if (this.config.mode === "slides" && (this.config.showPageIndicators || this.config.showPageControls)) {
 
-            var div = document.createElement("div");
             div.className = "MMMCarouselContainer";
 
             var paginationWrapper = document.createElement("div");
@@ -400,7 +420,7 @@ Module.register('MMM-Carousel', {
                 div.appendChild(nextWrapper);
                 div.appendChild(previousWrapper);
             }
-            return div;
-        }
+           }
+         return div;
     },
 });
