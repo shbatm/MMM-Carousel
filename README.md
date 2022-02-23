@@ -168,7 +168,10 @@ var config = {
 #### <a name="advanced-slides"></a>Example - Advanced Slides Carousel
 
 The `slides` parameter can accept an array of both String or an Object of the form: `{ name: "ModuleName", position: "top_left", classes: "CSSclassName", carouselId: "1" }`.
-Passing a config similar to the following shows a large clock on the first slide and then a small clock and additional modules on the second.  `carouselId` is an optional parameter which can be used to set a unique identifier for multiple instances of a module. To use, set the same parameter in the module's `config` section.
+
+Passing a config similar to the following shows a large clock on the first slide and then a small clock and additional modules on the second.
+
+`carouselId` is an optional parameter which can be used to set a unique identifier for multiple instances of a module. To use, set the same parameter in the module's `config` section.
 
 ```javascript
     mode: 'slides',
@@ -182,7 +185,10 @@ Passing a config similar to the following shows a large clock on the first slide
     }
 ```
 
-**Note:** The `zoomXXX` classes are available to change the scaling of a module. Using the methods above, you can pass `classes:'zoom%%%'` to scale a single module to a larger or smaller size.  Supported zooms are 070%, 080%, 090%, 125%, 150%, 175%, and 200%. Pass `classes:''` for 100%.  Edit your `'css/custom.css'` file to add additional classes.
+**Notes:**
+
+1. The `zoomXXX` classes are available to change the scaling of a module. Using the methods above, you can pass `classes:'zoom%%%'` to scale a single module to a larger or smaller size.  Supported zooms are 070%, 080%, 090%, 125%, 150%, 175%, and 200%. Pass `classes:''` for 100%.  Edit your `'css/custom.css'` file to add additional classes.
+2. If you want the same module twice on one slide, both must have the same `carouselId`.
 
 ## Navigation from other modules
 
