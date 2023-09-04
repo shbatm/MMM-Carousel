@@ -100,12 +100,12 @@ body {
   background: rgba(255, 255, 255, 1) !important;
 }
 
-.MMMCarouselPaused .slider-pagination label  {
+.mmm-carousel-paused .slider-pagination label  {
 	border-color: black;
 	background: rgba(0, 0, 0, 0.2);
 }
 
-.MMMCarouselPaused .mmm-carousel-current-page {
+.mmm-carousel-paused .mmm-carousel-current-page {
 	background: rgba(0, 0, 0, 1) !important;
 }
 

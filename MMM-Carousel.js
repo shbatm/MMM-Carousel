@@ -461,10 +461,10 @@ Module.register("MMM-Carousel", {
   updatePause: function(paused) {
     this.paused = paused;
     
-    var carousel = document.getElementsByClassName("MMMCarouselContainer")[0];
+    var carousel = document.getElementsByClassName("mmm-carousel-container")[0];
 
-    if (this.paused) carousel.classList.add("MMMCarouselPaused");
-    else carousel.classList.remove("MMMCarouselPaused");
+    if (this.paused) carousel.classList.add("mmm-carousel-paused");
+    else carousel.classList.remove("mmm-carousel-paused");
   },
 
   restartTimer() {
