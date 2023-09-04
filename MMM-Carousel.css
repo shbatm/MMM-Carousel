@@ -96,7 +96,7 @@ body {
   cursor: pointer !important;
 }
 
-.MMMCarouselCurrentPage {
+.mmm-carousel-current-page {
   background: rgba(255, 255, 255, 1) !important;
 }
 
@@ -105,7 +105,7 @@ body {
 	background: rgba(0, 0, 0, 0.2);
 }
 
-.MMMCarouselPaused .MMMCarouselCurrentPage {
+.MMMCarouselPaused .mmm-carousel-current-page {
 	background: rgba(0, 0, 0, 1) !important;
 }
 
