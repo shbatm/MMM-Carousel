@@ -36,7 +36,7 @@
   "devDependencies": {
     "eslint": "^8.54.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-markdownlint": "^0.5.0",
     "eslint-plugin-prettier": "^5.0.1",
