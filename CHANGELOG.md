@@ -1,6 +1,6 @@
 # Changelog
 
-## <a name="unreleased"></a>[unreleased]
+## <a name="0_4_0"></a>[0.4.0]
 
 - Add fade-out effect (by new option `slideFadeOutSpeed`) to slides #96
   - With this the option `slideTransitionSpeed` gets replased by `slideFadeInSpeed`.
