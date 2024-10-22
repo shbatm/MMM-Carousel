@@ -1,8 +1,10 @@
+/* global Module Log MM KeyHandler */
+
 Module.register("MMM-Carousel", {
   defaults: {
     transitionInterval: 10000,
-    slideFadeInSpeed: 1500,
-    slideFadeOutSpeed: 1500,
+    slideFadeInSpeed: 1000,
+    slideFadeOutSpeed: 1000,
     ignoreModules: [],
     mode: "global", // global || positional || slides
     top_bar: {
@@ -522,7 +524,10 @@ Module.register("MMM-Carousel", {
     }
   },
 
-  transitionTimeoutCallback: () => {
+  /* This is called when the module is loaded and the DOM is ready.
+   * This is the first method called after the module has been registered.
+   */
+  transitionTimeoutCallback () {
     let goToIndex = -1;
     let goToSlide;
     if (typeof this.config.homeSlide === "number") {
