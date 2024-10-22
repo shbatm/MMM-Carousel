@@ -1,5 +1,4 @@
-{
-  "trailingComma": "none",
+const config = {
   "overrides": [
     {
       "files": "*.md",
@@ -7,5 +6,8 @@
         "parser": "markdown"
       }
     }
-  ]
-}
+  ],
+  "trailingComma": "none"
+};
+
+export default config;
