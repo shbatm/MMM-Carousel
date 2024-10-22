@@ -1,5 +1,10 @@
 # Changelog
 
+## <a name="unreleased"></a>[unreleased]
+
+- Add fade-out effect (by new option `slideFadeOutSpeed`) to slides #96
+  - With this the option `slideTransitionSpeed` gets replased by `slideFadeInSpeed`.
+
 ## <a name="0_3_2"></a>[0.3.2]
 
 - Added Play/Pause Control (#70)
