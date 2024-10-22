@@ -1,9 +1,10 @@
-/* global KeyHandler Log MM Module */
+/* global Module Log MM KeyHandler */
 
 Module.register("MMM-Carousel", {
   defaults: {
     transitionInterval: 10000,
-    slideTransitionSpeed: 1500,
+    slideFadeInSpeed: 1000,
+    slideFadeOutSpeed: 1000,
     ignoreModules: [],
     mode: "global", // global || positional || slides
     top_bar: {
@@ -105,7 +106,7 @@ Module.register("MMM-Carousel", {
       this.toggleTimer();
     } else if (this.keyHandler.reverseMap[kp.keyName].startsWith("Slide")) {
       const goToSlide =
-        this.keyHandler.reverseMap[kp.keyName].match(/Slide([0-9]+)/iu);
+          this.keyHandler.reverseMap[kp.keyName].match(/Slide([0-9]+)/iu);
       Log.log(`${typeof goToSlide[1]} ${goToSlide[1]}`);
       if (typeof parseInt(goToSlide[1], 10) === "number") {
         this.manualTransition(parseInt(goToSlide[1], 10));
@@ -135,7 +136,7 @@ Module.register("MMM-Carousel", {
       // Register Key Handler
       if (
         this.config.keyBindings.enabled &&
-          MM.getModules().filter((kb) => kb.name === "MMM-KeyBindings").length > 0
+        MM.getModules().filter((kb) => kb.name === "MMM-KeyBindings").length > 0
       ) {
         this.keyBindings = {
           ...this.keyBindings,
@@ -149,8 +150,10 @@ Module.register("MMM-Carousel", {
         this.keyHandler = KeyHandler.create(this.name, this.keyBindings);
       }
 
-      // Initially, all modules are hidden except the first and any ignored modules
-      // We start by getting a list of all of the modules in the transition cycle
+      /*
+       * Initially, all modules are hidden except the first and any ignored modules
+       * We start by getting a list of all of the modules in the transition cycle
+       */
       if (this.config.mode === "global" || this.config.mode === "slides") {
         this.setUpTransitionTimers(null);
       } else {
@@ -206,14 +209,14 @@ Module.register("MMM-Carousel", {
         try {
           this.manualTransition(parseInt(payload, 10) - 1);
           this.restartTimer();
-        } catch (err) {
+        } catch {
           Log.error(`Could not navigate to slide ${payload}`);
         }
       } else if (typeof payload === "object") {
         try {
           this.manualTransition(undefined, 0, payload.slide);
           this.restartTimer();
-        } catch (err) {
+        } catch {
           Log.error(`Could not navigate to slide ${payload.slide}`);
         }
       }
@@ -230,7 +233,7 @@ Module.register("MMM-Carousel", {
         }
         return (
           this.config[positionIndex].ignoreModules.indexOf(module.name) ===
-            -1 && module.data.position === positionIndex
+          -1 && module.data.position === positionIndex
         );
       }, this);
 
@@ -241,7 +244,7 @@ Module.register("MMM-Carousel", {
     if (positionIndex !== null) {
       if (
         this.config[positionIndex].overrideTransitionInterval !== undefined &&
-          this.config[positionIndex].overrideTransitionInterval > 0
+        this.config[positionIndex].overrideTransitionInterval > 0
       ) {
         timer = this.config[positionIndex].overrideTransitionInterval;
       }
@@ -250,7 +253,8 @@ Module.register("MMM-Carousel", {
     modules.currentIndex = -1;
     modules.showPageIndicators = this.config.showPageIndicators;
     modules.showPageControls = this.config.showPageControls;
-    modules.slideTransitionSpeed = this.config.slideTransitionSpeed;
+    modules.slideFadeInSpeed = this.config.slideFadeInSpeed;
+    modules.slideFadeOutSpeed = this.config.slideFadeOutSpeed;
     this.moduleTransition.call(modules);
 
     // Reference to function for manual transitions
@@ -258,15 +262,17 @@ Module.register("MMM-Carousel", {
 
     if (
       this.config.mode !== "slides" ||
-        this.config.mode === "slides" && timer > 0
+      this.config.mode === "slides" && timer > 0
     ) {
-      // We set a timer to cause the page transitions
-      // If we're in slides mode and the timer is set to 0, we only use manual transitions
+      /*
+       * We set a timer to cause the page transitions
+       * If we're in slides mode and the timer is set to 0, we only use manual transitions
+       */
       this.transitionTimer = setInterval(this.manualTransition, timer);
     } else if (
       this.config.mode === "slides" &&
-        timer === 0 &&
-        this.config.transitionTimeout > 0
+      timer === 0 &&
+      this.config.transitionTimeout > 0
     ) {
       this.transitionTimer = setTimeout(() => {
         this.transitionTimeoutCallback();
@@ -343,84 +349,91 @@ Module.register("MMM-Carousel", {
       return false;
     };
 
+    // First, hide all modules before showing the new ones
     for (let i = 0; i < this.length; i += 1) {
-      /*
-       * There is currently no easy way to discover whether a module is ALREADY shown/hidden
-       * In testing, calling show/hide twice seems to cause no issues
-       */
-      Log.log(`Processing ${this[i].name}`);
-      if (this.slides === undefined && i === this.currentIndex) {
-        this[i].show(this.slideTransitionSpeed, false, {lockString: "mmmc"});
-      } else if (this.slides !== undefined) {
-        // Handle slides
-        const mods = this.slides[Object.keys(this.slides)[this.currentIndex]];
-        let show = false;
-        // Loop through all of the modules that are supposed to be in this slide
-        for (let s = 0; s < mods.length; s += 1) {
-          if (typeof mods[s] === "string" && mods[s] === this[i].name) {
+      this[i].hide(this.slideFadeOutSpeed, false, {lockString: "mmmc"}); // Hide all modules
+    }
+
+    setTimeout(() => {
+      for (let i = 0; i < this.length; i += 1) {
+        /*
+         * There is currently no easy way to discover whether a module is ALREADY shown/hidden
+         * In testing, calling show/hide twice seems to cause no issues
+         */
+        Log.log(`Processing ${this[i].name}`);
+        if (this.slides === undefined && i === this.currentIndex) {
+          this[i].show(this.slideFadeInSpeed, false, {lockString: "mmmc"});
+        } else if (this.slides !== undefined) {
+          // Handle slides
+          const mods = this.slides[Object.keys(this.slides)[this.currentIndex]];
+          let show = false;
+          // Loop through all of the modules that are supposed to be in this slide
+          for (let s = 0; s < mods.length; s += 1) {
+            if (typeof mods[s] === "string" && mods[s] === this[i].name) {
             // If only the module name is given as a string, and it matches, show the module
-            this[i].show(this.slideTransitionSpeed, false, {
-              lockString: "mmmc"
-            });
-            show = true;
-            break;
-          } else if (
-            typeof mods[s] === "object" &&
+              this[i].show(this.slideFadeInSpeed, false, {
+                lockString: "mmmc"
+              });
+              show = true;
+              break;
+            } else if (
+              typeof mods[s] === "object" &&
               "name" in mods[s] &&
               mods[s].name === this[i].name
-          ) {
+            ) {
             /*
              * If the slide definition has an object, and it's name matches the module continue
              * check if carouselId is set (mutiple module instances) and this is not the one we should show
              */
-            if (
-              typeof mods[s].carouselId !== "undefined" &&
+              if (
+                typeof mods[s].carouselId !== "undefined" &&
                 typeof this[i].data.config.carouselId !== "undefined" &&
-                  mods[s].carouselId !== this[i].data.config.carouselId
-            ) {
-              break;
-            }
-            if (typeof mods[s].classes === "string") {
+                mods[s].carouselId !== this[i].data.config.carouselId
+              ) {
+                break;
+              }
+              if (typeof mods[s].classes === "string") {
               // Check if we have any classes we're supposed to add
-              const dom = document.getElementById(this[i].identifier);
-              // Remove any classes added by this module (other slides)
-              [dom.className] = dom.className.split("mmmc");
-              if (mods[s].classes) {
+                const dom = document.getElementById(this[i].identifier);
+                // Remove any classes added by this module (other slides)
+                [dom.className] = dom.className.split("mmmc");
+                if (mods[s].classes) {
                 /*
                  * check for an empty classes tag (required to remove classes added from other slides)
                  * If we have a valid class list, add the classes
                  */
-                dom.classList.add("mmmc");
-                dom.classList.add(mods[s].classes);
+                  dom.classList.add("mmmc");
+                  dom.classList.add(mods[s].classes);
+                }
               }
-            }
 
-            if (typeof mods[s].position === "string") {
+              if (typeof mods[s].position === "string") {
               // Check if we were given a position to change, if so, move the module to the new position
-              selectWrapper(mods[s].position).appendChild(document.getElementById(this[i].identifier));
+                selectWrapper(mods[s].position).appendChild(document.getElementById(this[i].identifier));
+              }
+              // Finally show the module
+              this[i].show(this.slideFadeInSpeed, false, {
+                lockString: "mmmc"
+              });
+              show = true;
+              break;
             }
-            // Finally show the module
-            this[i].show(this.slideTransitionSpeed, false, {
-              lockString: "mmmc"
-            });
-            show = true;
-            break;
           }
-        }
-        // The module is not in this slide.
-        if (!show) {
+          // The module is not in this slide.
+          if (!show) {
+            this[i].hide(0, false, {lockString: "mmmc"});
+          }
+        } else {
+          // We aren't using slides and this module shouldn't be shown.
           this[i].hide(0, false, {lockString: "mmmc"});
         }
-      } else {
-        // We aren't using slides and this module shouldn't be shown.
-        this[i].hide(0, false, {lockString: "mmmc"});
       }
-    }
+    }, this.slideFadeOutSpeed);
 
     // Update the DOM if we're using it.
     if (
       this.slides !== undefined &&
-        (this.showPageIndicators || this.showPageControls)
+      (this.showPageIndicators || this.showPageControls)
     ) {
       const slider = document.getElementById(`slider_${this.currentIndex}`);
       slider.checked = true;
@@ -515,7 +528,11 @@ Module.register("MMM-Carousel", {
     }
   },
 
-  transitionTimeoutCallback: () => {
+  /*
+   * This is called when the module is loaded and the DOM is ready.
+   * This is the first method called after the module has been registered.
+   */
+  transitionTimeoutCallback () {
     let goToIndex = -1;
     let goToSlide;
     if (typeof this.config.homeSlide === "number") {
@@ -530,7 +547,8 @@ Module.register("MMM-Carousel", {
   },
 
   manualTransitionCallback (slideNum) {
-    // Log.log("manualTransition was called by slider_" + slideNum);
+    Log.debug(`manualTransition was called by slider_${slideNum}`);
+
     // Perform the manual transition
     this.manualTransition(slideNum);
     this.restartTimer();
@@ -560,7 +578,7 @@ Module.register("MMM-Carousel", {
 
     if (
       this.config.mode === "slides" &&
-        (this.config.showPageIndicators || this.config.showPageControls)
+      (this.config.showPageIndicators || this.config.showPageControls)
     ) {
       div.className = "mmm-carousel-container";
 
@@ -601,7 +619,7 @@ Module.register("MMM-Carousel", {
             nCtrlLabelWrapper.setAttribute("for", `slider_${j}`);
             nCtrlLabelWrapper.id = `sliderNextBtn_${j}`;
             nCtrlLabelWrapper.innerHTML =
-              "<i class='fa fa-arrow-circle-right'></i>";
+                "<i class='fa fa-arrow-circle-right'></i>";
             nextWrapper.appendChild(nCtrlLabelWrapper);
           }
 
@@ -610,7 +628,7 @@ Module.register("MMM-Carousel", {
             pCtrlLabelWrapper.setAttribute("for", `slider_${j}`);
             pCtrlLabelWrapper.id = `sliderPrevBtn_${j}`;
             pCtrlLabelWrapper.innerHTML =
-              "<i class='fa fa-arrow-circle-left'></i>";
+                "<i class='fa fa-arrow-circle-left'></i>";
             previousWrapper.appendChild(pCtrlLabelWrapper);
           }
         }

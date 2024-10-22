@@ -1,6 +1,6 @@
 {
   "name": "mmm-carousel",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Displays a single MagicMirror² module at a time or in groups of slides, rotating through the list of configured modules in a carousel-like fashion.",
   "main": "MMM-Carousel.js",
   "repository": {
@@ -34,16 +34,16 @@
   },
   "homepage": "https://github.com/shbatm/MMM-Carousel/#readme",
   "devDependencies": {
-    "@eslint/js": "^8.56.0",
-    "@stylistic/eslint-plugin": "^1.5.1",
-    "eslint": "^8.56.0",
-    "eslint-plugin-import": "^2.29.1",
-    "globals": "^13.24.0",
-    "markdownlint-cli": "^0.38.0",
-    "prettier": "^3.1.1",
-    "stylelint": "^16.1.0",
-    "stylelint-config-standard": "^36.0.0",
-    "stylelint-prettier": "^5.0.0"
+    "@eslint/js": "^9.13.0",
+    "@stylistic/eslint-plugin": "^2.9.0",
+    "eslint": "^9.13.0",
+    "eslint-plugin-import": "^2.31.0",
+    "globals": "^15.11.0",
+    "markdownlint-cli": "^0.42.0",
+    "prettier": "^3.3.3",
+    "stylelint": "^16.10.0",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-prettier": "^5.0.2"
   },
   "scripts": {
     "lint": "eslint . && stylelint **/*.css && markdownlint . --ignore node_modules && prettier --check .",

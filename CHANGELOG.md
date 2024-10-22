@@ -1,5 +1,12 @@
 # Changelog
 
+## <a name="0_4_0"></a>[0.4.0]
+
+- Add fade-out effect (by new option `slideFadeOutSpeed`) to slides #96. Thanks to @dennisklad!
+  - With this the option `slideTransitionSpeed` gets replaced by `slideFadeInSpeed`.
+- Upgrade ESLint
+- Update devDependencies
+
 ## <a name="0_3_2"></a>[0.3.2]
 
 - Added Play/Pause Control (#70)
