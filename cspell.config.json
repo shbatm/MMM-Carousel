@@ -1,0 +1,26 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "Agiles",
+    "barnabycolby",
+    "btastic",
+    "Chroms",
+    "currentweather",
+    "dennisklad",
+    "fitbit",
+    "Kristjan",
+    "mmmc",
+    "newsfeed",
+    "Pagger",
+    "planetrise",
+    "PLAYPAUSE",
+    "RTSP",
+    "screencast",
+    "shbatm",
+    "weatherforecast",
+    "Wunder"
+  ],
+  "ignorePaths": ["node_modules/**", "translations/**"],
+  "dictionaries": ["node"]
+}
