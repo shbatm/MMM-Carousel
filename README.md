@@ -295,3 +295,17 @@ let recipe = {
 
 exports.recipe = recipe; // Don't remove this line.
 ```
+
+## Contributing
+
+If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/shbatm/MMM-Carousel/issues) in this repository.
+
+Pull requests are of course also very welcome 🙂
+
+### Developer commands
+
+- `npm install` - Install dependencies like ESLint and prettier.
+- `npm run lint` - Run linting and formatter checks.
+- `npm run lint:fix` - Fix linting and formatter issues.
+- `npm run test` - Run linting and formatter checks + Run spelling check.
+- `npm run test:spelling` - Run spelling check.
