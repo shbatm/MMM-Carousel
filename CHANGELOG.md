@@ -1,5 +1,14 @@
 # Changelog
 
+## <a name="0_4_1"></a>[0.4.1] - Maintenance update
+
+- Add spell check
+- Add Contributing section to README
+- Fix typos
+- Switch to stylelint flat config
+- Update devDependencies
+- Update LICENSE file
+
 ## <a name="0_4_0"></a>[0.4.0]
 
 - Add fade-out effect (by new option `slideFadeOutSpeed`) to slides #96. Thanks to @dennisklad!
@@ -106,6 +115,7 @@ Changes:
             'MMM-WunderGround',
             'newsfeed'
         ]
+    ]
 ```
 
 - Made use of `zoom` classes introduced in [0.1.1]: using the method above, supported zooms are 070%, 080%, 090%, 125%, 150%, 175%, and 200%. Pass `classes:''` for 100%.
