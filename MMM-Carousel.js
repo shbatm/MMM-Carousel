@@ -383,7 +383,7 @@ Module.register("MMM-Carousel", {
             ) {
             /*
              * If the slide definition has an object, and it's name matches the module continue
-             * check if carouselId is set (mutiple module instances) and this is not the one we should show
+             * check if carouselId is set (multiple module instances) and this is not the one we should show
              */
               if (
                 typeof mods[s].carouselId !== "undefined" &&
@@ -560,10 +560,10 @@ Module.register("MMM-Carousel", {
 
   /*
    * getDom()
-   * This method generates the dom which needs to be displayed. This method is called by the MagicMirror² core.
+   * This method generates the DOM which needs to be displayed. This method is called by the MagicMirror² core.
    * This method needs to be subclassed if the module wants to display info on the mirror.
    *
-   * return domobject - The dom to display.
+   * return DOM object - The DOM to display.
    */
   getDom () {
     const self = this;

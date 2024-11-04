@@ -1,5 +1,14 @@
 # Changelog
 
+## <a name="0_4_1"></a>[0.4.1] - Maintenance update
+
+- Add spell check
+- Add Contributing section to README
+- Fix typos
+- Switch to stylelint flat config
+- Update devDependencies
+- Update LICENSE file
+
 ## <a name="0_4_0"></a>[0.4.0]
 
 - Add fade-out effect (by new option `slideFadeOutSpeed`) to slides #96. Thanks to @dennisklad!
@@ -39,13 +48,13 @@
 ## <a name="0_2_5"></a>[0.2.5] ― Added direct controls via Notification
 
 - Added control from Module Notification (See [README](README.md#Navigation-from-other-modules)).
-- Removed unneccessary and unused tests and Grunt file.
+- Removed unnecessary and unused tests and Grunt file.
 
 ## <a name="0_2_4"></a>[0.2.4] ― Module Fix for bug in MichMich/MagicMirror#1140
 
 - Uses 'MODULE_DOM_CREATED' notification instead of 'DOM_OBJECTS_CREATED'
 
-## <a name="0_2_4"></a>[0.2.4] ― Added slideTranistionSpeed Parameter per #4
+## <a name="0_2_4"></a>[0.2.4] ― Added slideTransitionSpeed Parameter per #4
 
 - Added a parameter for slide transition speed. Default is 1500ms.
 
@@ -55,13 +64,13 @@
 
 ## <a name="0_2_2"></a>[0.2.2] ― Added support for MMM-KeyBindings Instances
 
-- Added support for using MMM-KeyBindings control with multiple instances of the MagicMirror² open. For example, you can use a remote on the screen attached to the Raspberry Pi (SERVER) and use a keyboard on another computer with the mirror running in a browswer (LOCAL) to independently change slides on the respective screens.
+- Added support for using MMM-KeyBindings control with multiple instances of the MagicMirror² open. For example, you can use a remote on the screen attached to the Raspberry Pi (SERVER) and use a keyboard on another computer with the mirror running in a browser (LOCAL) to independently change slides on the respective screens.
 
 ## <a name="0_2_1"></a>[0.2.1] ― Multiple instances of a module
 
 Changes:
 
-- Added the ability to handle mutiple instances of a module. To use, add a `carouselId: "uniqueString"` to each modules' `config` section:
+- Added the ability to handle multiple instances of a module. To use, add a `carouselId: "uniqueString"` to each modules' `config` section:
 
 ```javascript
         {
@@ -106,6 +115,7 @@ Changes:
             'MMM-WunderGround',
             'newsfeed'
         ]
+    ]
 ```
 
 - Made use of `zoom` classes introduced in [0.1.1]: using the method above, supported zooms are 070%, 080%, 090%, 125%, 150%, 175%, and 200%. Pass `classes:''` for 100%.
