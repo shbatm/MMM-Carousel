@@ -45,17 +45,13 @@ git pull
 To use this module, add the following configuration block to the modules array in the `config/config.js` file:
 
 ```js
-let config = {
-  modules: [
     {
       module: "MMM-Carousel",
       position: "bottom_bar", // Required to draw in position
       config: {
         // See below for configurable options
       }
-    }
-  ]
-};
+    },
 ```
 
 Note that a `position` setting is required only if you want to show the page navigation icons and buttons.
@@ -83,8 +79,6 @@ The following properties can be configured:
 #### Example ― Global Carousel
 
 ```javascript
-let config = {
-  modules: [
     {
       module: "MMM-Carousel",
       config: {
@@ -92,16 +86,12 @@ let config = {
         ignoreModules: ["clock"],
         mode: "global"
       }
-    }
-  ]
-};
+    },
 ```
 
 #### Example ― Positional Carousel
 
 ```javascript
-let config = {
-  modules: [
     {
       module: "MMM-Carousel",
       config: {
@@ -115,16 +105,12 @@ let config = {
         },
         top_right: { enabled: true, ignoreModules: ["currentweather"] }
       }
-    }
-  ]
-};
+    },
 ```
 
 #### Example ― Slides Carousel
 
 ```javascript
-let config = {
-  modules: [
     {
       module: "MMM-Carousel",
       position: "bottom_bar", // Required only for navigation controls
@@ -145,16 +131,12 @@ let config = {
           "Slide 3": ["MMM-fitbit"]
         }
       }
-    }
-  ]
-};
+    },
 ```
 
 #### Example ― Slides Carousel with [MMM-KeyBindings](https://github.com/shbatm/MMM-KeyBindings)
 
 ```javascript
-let config = {
-  modules: [
     {
       module: "MMM-Carousel",
       position: "bottom_bar", // Required only for navigation controls
@@ -185,9 +167,7 @@ let config = {
           mode: "DEFAULT"
         }
       }
-    }
-  ]
-};
+    },
 ```
 
 #### <a name="advanced-slides"></a>Example ― Advanced Slides Carousel
