@@ -2,6 +2,7 @@
 
 ## <a name="0_5_0"></a>[0.5.0]
 
+- [feature] Add "CAROUSEL_CHANGED" notification
 - [chore] Optimize logging
 
 ## <a name="0_4_1"></a>[0.4.1] - Maintenance update

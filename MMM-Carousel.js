@@ -1,5 +1,7 @@
 /* global Module Log MM KeyHandler */
 
+let globalThis;
+
 Module.register("MMM-Carousel", {
   defaults: {
     transitionInterval: 10000,
@@ -95,6 +97,7 @@ Module.register("MMM-Carousel", {
 
   start () {
     Log.info(`Starting module: ${this.name} with identifier: ${this.identifier}`);
+    globalThis = this;
   },
 
   validKeyPress (kp) {
@@ -333,6 +336,8 @@ Module.register("MMM-Carousel", {
     }
 
     Log.debug(`[MMM-Carousel] Transitioning to slide ${this.currentIndex}`);
+    globalThis.sendNotification("CAROUSEL_CHANGED", {slide: this.currentIndex});
+
     /*
      * selectWrapper(position)
      * Select the wrapper dom object for a specific position.
