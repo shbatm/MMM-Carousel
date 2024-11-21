@@ -1,5 +1,7 @@
 /* global Module Log MM KeyHandler */
 
+let globalThis;
+
 Module.register("MMM-Carousel", {
   defaults: {
     transitionInterval: 10000,
@@ -93,7 +95,10 @@ Module.register("MMM-Carousel", {
     }
   },
 
-  requiresVersion: "2.3.0", // Uses 'MODULE_DOM_CREATED' notification instead of 'DOM_OBJECTS_CREATED'
+  start () {
+    Log.info(`Starting module: ${this.name} with identifier: ${this.identifier}`);
+    globalThis = this;
+  },
 
   validKeyPress (kp) {
     if (kp.keyName === this.keyHandler.config.map.NextSlide) {
@@ -105,9 +110,8 @@ Module.register("MMM-Carousel", {
     } else if (kp.keyName === this.keyHandler.config.map.Pause) {
       this.toggleTimer();
     } else if (this.keyHandler.reverseMap[kp.keyName].startsWith("Slide")) {
-      const goToSlide =
-          this.keyHandler.reverseMap[kp.keyName].match(/Slide([0-9]+)/iu);
-      Log.log(`${typeof goToSlide[1]} ${goToSlide[1]}`);
+      const goToSlide = this.keyHandler.reverseMap[kp.keyName].match(/Slide([0-9]+)/iu);
+      Log.debug(`[MMM-Carousel] ${typeof goToSlide[1]} ${goToSlide[1]}`);
       if (typeof parseInt(goToSlide[1], 10) === "number") {
         this.manualTransition(parseInt(goToSlide[1], 10));
         this.restartTimer();
@@ -194,7 +198,7 @@ Module.register("MMM-Carousel", {
       return;
     }
 
-    if (notification === "KEYPRESS") Log.log(`${this.config.name}: notification ${notification} from ${sender.name}`);
+    if (notification === "KEYPRESS") Log.debug(`[MMM-Carousel] notification ${notification} from ${sender.name}`);
 
     if (notification === "CAROUSEL_NEXT") {
       this.manualTransition(undefined, 1);
@@ -289,11 +293,11 @@ Module.register("MMM-Carousel", {
 
     // Update the current index
     if (goToSlide) {
-      Log.log(`In goToSlide, current slide index${this.currentIndex}`);
+      Log.log(`[MMM-Carousel] In goToSlide, current slide index${this.currentIndex}`);
       Object.keys(this.slides).find((s, j) => {
         if (goToSlide === s) {
           if (j === this.currentIndex) {
-            Log.log("No change, requested slide is the same");
+            Log.log("[MMM-Carousel] No change, requested slide is the same.");
             noChange = true;
           } else {
             this.currentIndex = j;
@@ -307,7 +311,7 @@ Module.register("MMM-Carousel", {
       if (goDirection === 0) {
         this.currentIndex += 1; // Normal Transition, Increment by 1
       } else {
-        // Log.log("Currently on slide " + this.currentIndex + " and going to slide " + (this.currentIndex + goDirection));
+        Log.debug(`[MMM-Carousel] Currently on slide ${this.currentIndex} and going to slide ${this.currentIndex + goDirection}`);
         this.currentIndex += goDirection; // Told to go a specific direction
       }
       if (this.currentIndex >= resetCurrentIndex) {
@@ -318,7 +322,7 @@ Module.register("MMM-Carousel", {
       }
     } else if (goToIndex >= 0 && goToIndex < resetCurrentIndex) {
       if (goToIndex === this.currentIndex) {
-        Log.log("No change, requested slide is the same");
+        Log.debug("[MMM-Carousel] No change, requested slide is the same.");
         noChange = true;
       } else {
         this.currentIndex = goToIndex; // Go to a specific slide if in range
@@ -326,10 +330,13 @@ Module.register("MMM-Carousel", {
     }
 
     // Some modules like MMM-RTSPStream get into an odd state if you enable them when already enabled
-    Log.log(` No change value:${noChange}`);
+    Log.debug(`[MMM-Carousel] No change value: ${noChange}`);
     if (noChange === true) {
       return;
     }
+
+    Log.debug(`[MMM-Carousel] Transitioning to slide ${this.currentIndex}`);
+    globalThis.sendNotification("CAROUSEL_CHANGED", {slide: this.currentIndex});
 
     /*
      * selectWrapper(position)
@@ -360,7 +367,7 @@ Module.register("MMM-Carousel", {
          * There is currently no easy way to discover whether a module is ALREADY shown/hidden
          * In testing, calling show/hide twice seems to cause no issues
          */
-        Log.log(`Processing ${this[i].name}`);
+        Log.debug(`[MMM-Carousel] Processing ${this[i].name}`);
         if (this.slides === undefined && i === this.currentIndex) {
           this[i].show(this.slideFadeInSpeed, false, {lockString: "mmmc"});
         } else if (this.slides !== undefined) {
@@ -458,13 +465,13 @@ Module.register("MMM-Carousel", {
           }
         }
         if (this.currentIndex !== resetCurrentIndex - 1) {
-          // Log.log("Trying to enable button sliderNextBtn_" + (this.currentIndex+1));
+          Log.debug(`[MMM-Carousel] Trying to enable button sliderNextBtn_${this.currentIndex + 1}`);
           document
             .getElementById(`sliderNextBtn_${this.currentIndex + 1}`)
             .classList.add("mmm-carousel-available");
         }
         if (this.currentIndex !== 0) {
-          // Log.log("Trying to enable button sliderPrevBtn_" + (this.currentIndex-1));
+          Log.debug(`[MMM-Carousel] Trying to enable button sliderPrevBtn_${this.currentIndex - 1}`);
           document
             .getElementById(`sliderPrevBtn_${this.currentIndex - 1}`)
             .classList.add("mmm-carousel-available");
@@ -558,6 +565,12 @@ Module.register("MMM-Carousel", {
     return ["MMM-Carousel.css"];
   },
 
+  makeOnChangeHandler (id) {
+    return () => {
+      this.manualTransitionCallback(id);
+    };
+  },
+
   /*
    * getDom()
    * This method generates the DOM which needs to be displayed. This method is called by the MagicMirror² core.
@@ -566,14 +579,6 @@ Module.register("MMM-Carousel", {
    * return DOM object - The DOM to display.
    */
   getDom () {
-    const self = this;
-
-    function makeOnChangeHandler (id) {
-      return () => {
-        self.manualTransitionCallback(id);
-      };
-    }
-
     const div = document.createElement("div");
 
     if (
@@ -591,7 +596,7 @@ Module.register("MMM-Carousel", {
         input.name = "slider";
         input.id = `slider_${i}`;
         input.className = "slide-radio";
-        input.onchange = makeOnChangeHandler(i);
+        input.onchange = this.makeOnChangeHandler(i);
         paginationWrapper.appendChild(input);
       }
 
