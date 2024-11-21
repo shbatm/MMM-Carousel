@@ -1,5 +1,9 @@
 # Changelog
 
+## <a name="0_5_0"></a>[0.5.0]
+
+- [chore] Optimize logging
+
 ## <a name="0_4_1"></a>[0.4.1] - Maintenance update
 
 - Add spell check
