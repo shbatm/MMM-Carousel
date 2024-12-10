@@ -290,3 +290,7 @@ Pull requests are of course also very welcome 🙂
 - `npm run release` - Bump version for release.
 - `npm run test` - Run linting and formatter checks + Run spelling check.
 - `npm run test:spelling` - Run spelling check.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details.
