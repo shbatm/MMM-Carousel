@@ -5,6 +5,7 @@
     "Agiles",
     "barnabycolby",
     "btastic",
+    "bumpp",
     "Chroms",
     "currentweather",
     "dennisklad",
@@ -21,6 +22,11 @@
     "weatherforecast",
     "Wunder"
   ],
-  "ignorePaths": ["node_modules/**", "translations/**"],
-  "dictionaries": ["node"]
+  "ignorePaths": [
+    "node_modules/**",
+    "translations/**"
+  ],
+  "dictionaries": [
+    "node"
+  ]
 }
