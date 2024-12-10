@@ -1,6 +1,6 @@
 {
   "name": "mmm-carousel",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Displays a single MagicMirror² module at a time or in groups of slides, rotating through the list of configured modules in a carousel-like fashion.",
   "main": "MMM-Carousel.js",
   "repository": {
@@ -31,21 +31,22 @@
   },
   "homepage": "https://github.com/shbatm/MMM-Carousel/#readme",
   "devDependencies": {
-    "@eslint/js": "^9.15.0",
-    "@stylistic/eslint-plugin": "^2.11.0",
-    "cspell": "^8.16.0",
-    "eslint": "^9.15.0",
+    "@eslint/js": "^9.16.0",
+    "@stylistic/eslint-plugin": "^2.12.0",
+    "cspell": "^8.16.1",
+    "eslint": "^9.16.0",
     "eslint-plugin-import": "^2.31.0",
-    "globals": "^15.12.0",
-    "markdownlint-cli": "^0.42.0",
-    "prettier": "^3.3.3",
-    "stylelint": "^16.10.0",
+    "globals": "^15.13.0",
+    "markdownlint-cli": "^0.43.0",
+    "prettier": "^3.4.2",
+    "stylelint": "^16.11.0",
     "stylelint-config-standard": "^36.0.1",
     "stylelint-prettier": "^5.0.2"
   },
   "scripts": {
     "lint": "eslint . && stylelint **/*.css && markdownlint . --ignore node_modules && prettier --check .",
     "lint:fix": "eslint . --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier --write .",
+    "release": "npx bumpp --no-push",
     "test": "npm run lint && npm run test:spelling",
     "test:spelling": "cspell ."
   }

@@ -1,5 +1,16 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## <a name="0_5_1"></a>[0.5.1] - Maintenance Release
+
+- [chore] Add release script
+- [chore] Add changelog and license section to README
+- [chore] Add introduction notes to CHANGELOG
+- [chore] Update devDependencies
+
 ## <a name="0_5_0"></a>[0.5.0]
 
 - [feature] Add "CAROUSEL_CHANGED" notification
@@ -7,7 +18,7 @@
 - [chore] Optimize logging
 - [chore] Update devDependencies
 
-## <a name="0_4_1"></a>[0.4.1] - Maintenance update
+## <a name="0_4_1"></a>[0.4.1] - Maintenance Release
 
 - Add spell check
 - Add Contributing section to README
