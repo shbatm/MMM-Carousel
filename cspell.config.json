@@ -22,11 +22,6 @@
     "weatherforecast",
     "Wunder"
   ],
-  "ignorePaths": [
-    "node_modules/**",
-    "translations/**"
-  ],
-  "dictionaries": [
-    "node"
-  ]
+  "ignorePaths": ["node_modules/**", "translations/**"],
+  "dictionaries": ["node"]
 }
