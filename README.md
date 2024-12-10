@@ -291,6 +291,10 @@ Pull requests are of course also very welcome 🙂
 - `npm run test` - Run linting and formatter checks + Run spelling check.
 - `npm run test:spelling` - Run spelling check.
 
+## Changelog
+
+All notable changes to this project will be documented in the [CHANGELOG.md](./CHANGELOG.md) file.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details.
