@@ -48,6 +48,6 @@
     "lint:fix": "eslint . --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier --write .",
     "release": "npx bumpp --no-push",
     "test": "npm run lint && npm run test:spelling",
-    "test:spelling": "cspell ."
+    "test:spelling": "cspell . .github"
   }
 }
