@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.2] - Maintenance Release
+
+- Update devDependencies
+- Add GitHub workflow
+- Check spelling also in .github directory
+- Fix typo
+
 ## <a name="0_5_1"></a>[0.5.1] - Maintenance Release
 
 - [chore] Add release script
