@@ -4,28 +4,39 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.2] - Maintenance Release
+## [0.5.3] ― 2025-02-02 ― Maintenance Release
+
+- Update devDependencies
+- Add dates and links to CHANGELOG entries
+- Order package.json in the npm standard way
+- Replace eslint-plugin-import with eslint-plugin-import-x
+- Simplify ESLint calls and stylistic ESLint config
+- Remove unused release script
+- Add link to Code of Conduct into README
+- Switch node-version to lts in GitHub workflow
+
+## [0.5.2] ― 2025-02-02 ― Maintenance Release
 
 - Update devDependencies
 - Add GitHub workflow
 - Check spelling also in .github directory
 - Fix typo
 
-## <a name="0_5_1"></a>[0.5.1] - Maintenance Release
+## [0.5.1] ― 2024-12-10 ― Maintenance Release
 
 - [chore] Add release script
 - [chore] Add changelog and license section to README
 - [chore] Add introduction notes to CHANGELOG
 - [chore] Update devDependencies
 
-## <a name="0_5_0"></a>[0.5.0]
+## [0.5.0] ― 2024-11-21
 
 - [feature] Add "CAROUSEL_CHANGED" notification
 - [docs] Optimize configuration examples
 - [chore] Optimize logging
 - [chore] Update devDependencies
 
-## <a name="0_4_1"></a>[0.4.1] - Maintenance Release
+## [0.4.1] ― 2024-04-11 ― Maintenance Release
 
 - Add spell check
 - Add Contributing section to README
@@ -34,64 +45,64 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Update devDependencies
 - Update LICENSE file
 
-## <a name="0_4_0"></a>[0.4.0]
+## [0.4.0] ― 2024-10-23
 
 - Add fade-out effect (by new option `slideFadeOutSpeed`) to slides #96. Thanks to @dennisklad!
   - With this the option `slideTransitionSpeed` gets replaced by `slideFadeInSpeed`.
 - Upgrade ESLint
 - Update devDependencies
 
-## <a name="0_3_2"></a>[0.3.2]
+## [0.3.2] ― 2023-09-11
 
 - Added Play/Pause Control (#70)
 
-## <a name="0_3_1"></a>[0.3.1]
+## [0.3.1] ― 2023-06-19
 
 - Fix transitionTimeoutCallback by @btastic (#66)
 - Use screenshots instead of photos (#54)
 - Update devDependencies
 
-## <a name="0_3_0"></a>[0.3.0] ― Add option to default to home slide on timeout
+## [0.3.0] ― 2022-02-01 ― Add option to default to home slide on timeout
 
 - Add `homeSlide` and `transitionTimeout` to timeout and return to a home page, similar to MMM-Pages (#30)
 - Merge downstream changes from @KristjanESPERANTO and others (Thanks!)
 
-## <a name="0_2_8"></a>[0.2.8]
+## [0.2.8] ― 2021-12-25
 
 - Cleanup
 
-## <a name="0_2_7"></a>[0.2.7] ― Add fullscreen positions
+## [0.2.7] ― 2021-05-05 ― Add fullscreen positions
 
 - Added support for fullscreen positions.
 
-## <a name="0_2_6"></a>[0.2.6] ― Named Slide Support & Update for new MMM-KeyBindings
+## [0.2.6] ― 2019-01-03 ― Named Slide Support & Update for new MMM-KeyBindings
 
 - Added support for named slides.
 - Updated Key Handling for new MMM-KeyBindings methods.
 - Broadcast API request to new MMM-Remote-Control API.
 
-## <a name="0_2_5"></a>[0.2.5] ― Added direct controls via Notification
+## [0.2.5] ― 2018-12-19 ― Added direct controls via Notification
 
 - Added control from Module Notification (See [README](README.md#Navigation-from-other-modules)).
 - Removed unnecessary and unused tests and Grunt file.
 
-## <a name="0_2_4"></a>[0.2.4] ― Module Fix for bug in MichMich/MagicMirror#1140
+## [0.2.5-dev] ― 2018-05-09 ― Module Fix for bug in MichMich/MagicMirror#1140
 
 - Uses 'MODULE_DOM_CREATED' notification instead of 'DOM_OBJECTS_CREATED'
 
-## <a name="0_2_4"></a>[0.2.4] ― Added slideTransitionSpeed Parameter per #4
+## [0.2.4] ― 2017-11-29 ― Added slideTransitionSpeed Parameter per #4
 
 - Added a parameter for slide transition speed. Default is 1500ms.
 
-## <a name="0_2_3"></a>[0.2.3] ― Fix for #1 ― Fix timed transition for slides
+## [0.2.3] ― 2017-11-01 ― Fix for #1 ― Fix timed transition for slides
 
 - Bug fix for Issue #1 -- Correct issue where setting transitionInterval for a "slides" configuration doesn't actually cause the slides to transition automatically.
 
-## <a name="0_2_2"></a>[0.2.2] ― Added support for MMM-KeyBindings Instances
+## [0.2.2] ― 2017-06-03 ― Added support for MMM-KeyBindings Instances
 
 - Added support for using MMM-KeyBindings control with multiple instances of the MagicMirror² open. For example, you can use a remote on the screen attached to the Raspberry Pi (SERVER) and use a keyboard on another computer with the mirror running in a browser (LOCAL) to independently change slides on the respective screens.
 
-## <a name="0_2_1"></a>[0.2.1] ― Multiple instances of a module
+## [0.2.1] ― 2017-05-29 ― Multiple instances of a module
 
 Changes:
 
@@ -125,7 +136,7 @@ Changes:
         },
 ```
 
-## [0.2.0] ― Added manual-only slides and per-slide positions & classes
+## [0.2.0] ― 2027-05-22 ― Added manual-only slides and per-slide positions & classes
 
 Changes:
 
@@ -147,7 +158,7 @@ Changes:
 - Added support for indefinite slides -- set `transitionInterval: 0` for manual-transition only slides
 - Added KeyPress events to go to specific slide index. (e.g. `Slide0: "Home"` in the KeyBindings would jump to the first slide when the home key is pushed). Works with any number of slides in the format `Slide#: "KeyName"` where # is the 0-based index of the slide.
 
-## [0.1.1] ― Added manual transitions
+## [0.1.1] ― 2017-05-20 ― Added manual transitions
 
 Changes:
 
@@ -155,6 +166,28 @@ Changes:
 - Added optional Pagination indicators at the bottom of the screen to show what slide is currently showing.
 - Added hidden next/previous page controls that show on hover in each lower corner
 
-## [0.1.0] ― First public release
+## [0.1.0] ― 2016-08-17 ― First public release
 
 First public release
+
+[0.5.3]: https://github.com/shbatm/MMM-Carousel/compare/v0.5.2...v0.5.3
+[0.5.2]: https://github.com/shbatm/MMM-Carousel/compare/v0.5.1...v0.5.2
+[0.5.1]: https://github.com/shbatm/MMM-Carousel/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/shbatm/MMM-Carousel/compare/v0.4.1...v0.5.0
+[0.4.1]: https://github.com/shbatm/MMM-Carousel/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/shbatm/MMM-Carousel/compare/v0.3.2...v0.4.0
+[0.3.2]: https://github.com/shbatm/MMM-Carousel/compare/v0.3.1...v0.3.2
+[0.3.1]: https://github.com/shbatm/MMM-Carousel/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.8...v0.3.0
+[0.2.8]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.7...v0.2.8
+[0.2.7]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.6...v0.2.7
+[0.2.6]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.5...v0.2.6
+[0.2.5]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.5-dev...v0.2.5
+[0.2.5-dev]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.4...v0.2.5-dev
+[0.2.4]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/shbatm/MMM-Carousel/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/shbatm/MMM-Carousel/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/shbatm/MMM-Carousel/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/shbatm/MMM-Carousel/releases/tag/v0.1.0
