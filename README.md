@@ -204,7 +204,7 @@ You can navigate to different slides or transition points manually from other mo
 - To see available actions, navigate to `http://magicmirrorip:8080/api/module/MMM-Carousel`. You can then call the actions using curl or any other web browser/navigator:
 
 ```shell
-curl -X GET http://magicmirrorip:8080/api/module/MMM-Carousel/action
+curl -X GET http://magicmirrorip:8080/api/module/MMM-Carousel/{action}
 ```
 
 #### Example1 ― Recipe for MMM-AssistantMk2
