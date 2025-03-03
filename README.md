@@ -201,10 +201,10 @@ You can navigate to different slides or transition points manually from other mo
 
 ### This module is compatible with MMM-Remote-Control's API (v2 or above)
 
-- To see available actions, navigate to `http://magicmirrorip:8080/api/module/carousel`. You can then call the actions using curl or any other web browser/navigator:
+- To see available actions, navigate to `http://magicmirrorip:8080/api/module/MMM-Carousel`. You can then call the actions using curl or any other web browser/navigator:
 
 ```shell
-curl -X GET http://magicmirrorip:8080/api/module/carousel/action
+curl -X GET http://magicmirrorip:8080/api/module/MMM-Carousel/action
 ```
 
 #### Example1 ― Recipe for MMM-AssistantMk2
