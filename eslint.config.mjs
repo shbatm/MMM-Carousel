@@ -56,7 +56,7 @@ const config = [
       "sourceType": "module"
     },
     "rules": {
-      "@stylistic/array-element-newline": "off",
+      "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/indent": ["error", 2],
       "@stylistic/object-property-newline": "off",
       "@stylistic/padded-blocks": ["error", "never"],
