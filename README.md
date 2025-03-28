@@ -22,7 +22,7 @@ There are three modes available:
 - Modules can be moved to different positions and CSS classes applied to them for each slide.
 - Multiple instances of a module can be used on different slides.
 - Integration with [MMM-KeyBindings](https://github.com/shbatm/MMM-KeyBindings) for keyboard and bluetooth remote navigation.
-- Rotational Home Page ― returns to a specified page on timeout
+- Rotational Home Page ― returns to a specified page on timeout.
 
 ## Installation
 
@@ -207,75 +207,6 @@ You can navigate to different slides or transition points manually from other mo
 curl -X GET http://magicmirrorip:8080/api/module/MMM-Carousel/{action}
 ```
 
-#### Example1 ― Recipe for MMM-AssistantMk2
-
-```javascript
-let recipe = {
-  transcriptionHook: {
-    MY_COMMAND_06: {
-      pattern: "change mode",
-      command: "MY_COMMAND_06_01"
-    }
-  },
-  command: {
-    MY_COMMAND_06_01: {
-      notificationExec: {
-        notification: "CAROUSEL_TOGGLE_SLIDE_MODE"
-      }
-    }
-  }
-};
-
-exports.recipe = recipe; // Don't remove this line.
-```
-
-#### Example2 ― Recipe for MMM-AssistantMk2
-
-```javascript
-let recipe = {
-  transcriptionHook: {
-    MY_COMMAND_08: {
-      pattern: "start carousel",
-      command: "MY_COMMAND_08_01"
-    }
-  },
-  command: {
-    MY_COMMAND_08_01: {
-      notificationExec: {
-        notification: "CAROUSEL_START_SLIDE"
-      }
-    }
-  }
-};
-
-exports.recipe = recipe; // Don't remove this line.
-```
-
-#### Example3 ― Recipe for MMM-AssistantMk2
-
-```javascript
-let recipe = {
-  transcriptionHook: {
-    MY_COMMAND_07: {
-      pattern: "set time to (( |\\d+)+)",
-      command: "MY_COMMAND_07_01"
-    }
-  },
-  command: {
-    MY_COMMAND_07_01: {
-      notificationExec: {
-        notification: "CAROUSEL_CHANGE_SLIDE_INTERVAL_TIME",
-        payload: (pattern) => {
-          return pattern[1];
-        }
-      }
-    }
-  }
-};
-
-exports.recipe = recipe; // Don't remove this line.
-```
-
 ## Contributing
 
 If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/shbatm/MMM-Carousel/issues) in this repository.
@@ -296,8 +227,8 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ## Changelog
 
-All notable changes to this project will be documented in the [CHANGELOG.md](./CHANGELOG.md) file.
+All notable changes to this project will be documented in the [CHANGELOG.md](CHANGELOG.md) file.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
