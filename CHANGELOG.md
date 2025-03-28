@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.3] ― 2025-02-02 ― Maintenance Release
+## [0.5.4](https://github.com/shbatm/MMM-Carousel/compare/v0.5.3...v0.5.4) ― 2025-03-28 ― Maintenance Release
+
+- Fix MMM-Remote-Control URLs in README
+- Remove recipes for MMM-AssistantMk2 from README. MMM-AssistantMk2 doesn't work anymore.
+- Simplify stylelint config
+- Update devDependencies
+
+## [0.5.3](https://github.com/shbatm/MMM-Carousel/compare/v0.5.2...v0.5.3) ― 2025-02-02 ― Maintenance Release
 
 - Update devDependencies
 - Add dates and links to CHANGELOG entries
@@ -170,7 +177,6 @@ Changes:
 
 First public release
 
-[0.5.3]: https://github.com/shbatm/MMM-Carousel/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/shbatm/MMM-Carousel/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/shbatm/MMM-Carousel/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/shbatm/MMM-Carousel/compare/v0.4.1...v0.5.0
