@@ -370,7 +370,10 @@ Module.register("MMM-Carousel", {
         Log.debug(`[MMM-Carousel] Processing ${this[i].name}`);
         if (this.slides === undefined && i === this.currentIndex) {
           this[i].show(this.slideFadeInSpeed, false, {lockString: "mmmc"});
-        } else if (this.slides !== undefined) {
+        } else if (this.slides === undefined) {
+          // We aren't using slides and this module shouldn't be shown.
+          this[i].hide(0, false, {lockString: "mmmc"});
+        } else {
           // Handle slides
           const mods = this.slides[Object.keys(this.slides)[this.currentIndex]];
           let show = false;
@@ -430,9 +433,6 @@ Module.register("MMM-Carousel", {
           if (!show) {
             this[i].hide(0, false, {lockString: "mmmc"});
           }
-        } else {
-          // We aren't using slides and this module shouldn't be shown.
-          this[i].hide(0, false, {lockString: "mmmc"});
         }
       }
     }, this.slideFadeOutSpeed);

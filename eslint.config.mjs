@@ -38,7 +38,6 @@ const config = [
       "max-statements": ["error", 50],
       "no-inline-comments": "off",
       "no-magic-numbers": "off",
-      "no-negated-condition": "off",
       "no-undefined": "off",
       "one-var": "off",
       "prefer-named-capture-group": "off",
