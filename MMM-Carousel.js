@@ -120,7 +120,6 @@ Module.register("MMM-Carousel", {
   },
 
   notificationReceived (notification, payload, sender) {
-    let position;
     const positions = [
       "top_bar",
       "bottom_bar",
@@ -161,9 +160,9 @@ Module.register("MMM-Carousel", {
       if (this.config.mode === "global" || this.config.mode === "slides") {
         this.setUpTransitionTimers(null);
       } else {
-        for (position = 0; position < positions.length; position += 1) {
-          if (this.config[positions[position]].enabled === true) {
-            this.setUpTransitionTimers(positions[position]);
+        for (const position of positions) {
+          if (this.config[position].enabled) {
+            this.setUpTransitionTimers(position);
           }
         }
       }
@@ -409,7 +408,7 @@ Module.register("MMM-Carousel", {
                 [dom.className] = dom.className.split("mmmc");
                 if (mods[s].classes) {
                 /*
-                 * check for an empty classes tag (required to remove classes added from other slides)
+                 * Check for an empty classes tag (required to remove classes added from other slides)
                  * If we have a valid class list, add the classes
                  */
                   dom.classList.add("mmmc");
