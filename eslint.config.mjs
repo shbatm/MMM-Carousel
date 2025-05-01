@@ -24,12 +24,11 @@ const config = [
       "@stylistic/lines-around-comment": "off",
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "as-needed"],
-      "camelcase": "off",
+      "camelcase": ["error", {"allow": ["bottom_", "fullscreen_", "lower_", "middle_center", "top_", "upper_third"]}],
       "capitalized-comments": "off",
       "complexity": ["error", 30],
       "consistent-this": "off",
       "curly": ["error", "multi-line"],
-      "func-style": "off",
       "id-length": ["error", {"exceptions": ["_", "i", "j", "s"], "min": 2}],
       "init-declarations": "off",
       "max-depth": ["error", 7],
@@ -39,7 +38,7 @@ const config = [
       "no-inline-comments": "off",
       "no-magic-numbers": "off",
       "no-undefined": "off",
-      "one-var": "off",
+      "one-var": ["error", "never"],
       "prefer-named-capture-group": "off",
       "sort-keys": "off",
       "strict": "off"
@@ -59,11 +58,9 @@ const config = [
       "@stylistic/indent": ["error", 2],
       "@stylistic/object-property-newline": "off",
       "@stylistic/padded-blocks": ["error", "never"],
-      "func-style": "off",
       "max-lines-per-function": ["error", 100],
       "no-magic-numbers": "off",
-      "one-var": "off",
-      "prefer-destructuring": "off"
+      "one-var": ["error", "never"]
     }
   }
 ];
