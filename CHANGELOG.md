@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.5](https://github.com/shbatm/MMM-Carousel/compare/v0.5.4...v0.5.5) ― 2025-05-01 ― Maintenance Release
+
+- chore: optimize ESLint config for consistency
+- chore: update devDependencies
+- chore: update ESLint configuration to use new import plugin structure
+- refactor: remove negated condition in method `setTimeout`
+- refactor: simplify position handling in method `notificationReceived`
+- refactor: update background color syntax in `MMM-Carousel.css`
+
 ## [0.5.4](https://github.com/shbatm/MMM-Carousel/compare/v0.5.3...v0.5.4) ― 2025-03-28 ― Maintenance Release
 
 - Fix MMM-Remote-Control URLs in README
