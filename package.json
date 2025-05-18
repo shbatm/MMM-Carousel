@@ -33,7 +33,7 @@
   "scripts": {
     "lint": "eslint && stylelint **/*.css && markdownlint-cli2 . && prettier --check .",
     "lint:fix": "eslint --fix && stylelint **/*.css --fix && markdownlint-cli2 . --fix && prettier --write .",
-    "test": "npm run lint && npm run test:spelling",
+    "test": "node --run lint && node --run test:spelling",
     "test:spelling": "cspell . .github"
   },
   "devDependencies": {
