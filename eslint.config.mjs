@@ -1,12 +1,10 @@
-import eslintPluginJs from "@eslint/js";
-import eslintPluginStylistic from "@stylistic/eslint-plugin";
+import {defineConfig} from "eslint/config";
 import globals from "globals";
-import {flatConfigs as importConfigs} from "eslint-plugin-import-x";
+import {flatConfigs as importX} from "eslint-plugin-import-x";
+import js from "@eslint/js";
+import stylistic from "@stylistic/eslint-plugin";
 
-const config = [
-  importConfigs.recommended,
-  eslintPluginJs.configs.all,
-  eslintPluginStylistic.configs.all,
+export default defineConfig([
   {
     "files": ["**/*.js"],
     "languageOptions": {
@@ -14,9 +12,10 @@ const config = [
       "globals": {
         ...globals.browser,
         ...globals.node
-      },
-      "sourceType": "commonjs"
+      }
     },
+    "plugins": {js, stylistic},
+    "extends": [importX.recommended, "js/all", "stylistic/all"],
     "rules": {
       "@stylistic/dot-location": ["error", "property"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
@@ -53,16 +52,18 @@ const config = [
       },
       "sourceType": "module"
     },
+    "plugins": {js, stylistic},
+    "extends": [importX.recommended, "js/all", "stylistic/all"],
     "rules": {
       "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/indent": ["error", 2],
-      "@stylistic/object-property-newline": "off",
+      "@stylistic/object-property-newline": ["error", {"allowAllPropertiesOnSameLine": true}],
       "@stylistic/padded-blocks": ["error", "never"],
       "max-lines-per-function": ["error", 100],
+      "import-x/no-unresolved": ["error", {"ignore": ["eslint/config"]}],
       "no-magic-numbers": "off",
-      "one-var": ["error", "never"]
+      "one-var": ["error", "never"],
+      "sort-keys": "off"
     }
   }
-];
-
-export default config;
+]);
