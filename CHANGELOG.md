@@ -22,10 +22,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [0.5.4](https://github.com/shbatm/MMM-Carousel/compare/v0.5.3...v0.5.4) ― 2025-03-28 ― Maintenance Release
 
-- Fix MMM-Remote-Control URLs in README
-- Remove recipes for MMM-AssistantMk2 from README. MMM-AssistantMk2 doesn't work anymore.
-- Simplify stylelint config
-- Update devDependencies
+- docs: Fix MMM-Remote-Control URLs in README
+- docs: Remove recipes for MMM-AssistantMk2 from README. MMM-AssistantMk2 doesn't work anymore.
+- chore: Simplify stylelint config
+- chore: Update devDependencies
 
 ## [0.5.3](https://github.com/shbatm/MMM-Carousel/compare/v0.5.2...v0.5.3) ― 2025-02-02 ― Maintenance Release
 
@@ -47,26 +47,26 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [0.5.1] ― 2024-12-10 ― Maintenance Release
 
-- [chore] Add release script
-- [chore] Add changelog and license section to README
-- [chore] Add introduction notes to CHANGELOG
-- [chore] Update devDependencies
+- chore: Add release script
+- chore: Add changelog and license section to README
+- chore: Add introduction notes to CHANGELOG
+- chore: Update devDependencies
 
 ## [0.5.0] ― 2024-11-21
 
-- [feature] Add "CAROUSEL_CHANGED" notification
-- [docs] Optimize configuration examples
-- [chore] Optimize logging
-- [chore] Update devDependencies
+- feature: Add "CAROUSEL_CHANGED" notification
+- docs: Optimize configuration examples
+- chore: Optimize logging
+- chore: Update devDependencies
 
 ## [0.4.1] ― 2024-04-11 ― Maintenance Release
 
-- Add spell check
-- Add Contributing section to README
-- Fix typos
-- Switch to stylelint flat config
-- Update devDependencies
-- Update LICENSE file
+- chore: Add spell check
+- docs: Add Contributing section to README
+- docs: Fix typos
+- chore: Switch to stylelint flat config
+- chore: Update devDependencies
+- docs: Update LICENSE file
 
 ## [0.4.0] ― 2024-10-23
 
