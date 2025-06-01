@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.7](https://github.com/shbatm/MMM-Carousel/compare/v0.5.6...v0.5.7) ― 2025-06-01 ― Maintenance Release
+
+- chore: add `lint-staged` and `husky` to lint staged files
+- chore: lint `css` and `markdown` with ESLint instead of `stylelint` and `markdownlint-cli2`
+- chore: update devDependencies
+
 ## [0.5.6](https://github.com/shbatm/MMM-Carousel/compare/v0.5.5...v0.5.6) ― 2025-05-18 ― Maintenance Release
 
 - chore: replaced `markdownlint-cli` with `markdownlint-cli2`
