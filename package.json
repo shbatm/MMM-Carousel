@@ -33,8 +33,15 @@
   "scripts": {
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint --fix && prettier --write .",
+    "prepare": "[ -f node_modules/.bin/husky ] && husky || echo husky is not installed.",
     "test": "node --run lint && node --run test:spelling",
     "test:spelling": "cspell . .github"
+  },
+  "lint-staged": {
+    "*": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ]
   },
   "devDependencies": {
     "@eslint/css": "^0.8.1",
@@ -45,6 +52,7 @@
     "eslint": "^9.28.0",
     "eslint-plugin-import-x": "^4.15.0",
     "globals": "^16.2.0",
+    "lint-staged": "^16.1.0",
     "prettier": "^3.5.3"
   }
 }
