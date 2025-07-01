@@ -216,7 +216,10 @@ Passing a config similar to the following shows a large clock on the first slide
     },
 ```
 
-**Note:** The `zoomXXX` classes are available to change the scaling of a module. Using the methods above, you can pass `classes:'zoom%%%'` to scale a single module to a larger or smaller size. Supported zooms are 070%, 080%, 090%, 125%, 150%, 175%, and 200%. Pass `classes:''` for 100%. Edit your `'css/custom.css'` file to add additional classes.
+**Notes:**
+
+1. The `zoomXXX` classes are available to change the scaling of a module. Using the methods above, you can pass `classes:'zoom%%%'` to scale a single module to a larger or smaller size. Supported zooms are 070%, 080%, 090%, 125%, 150%, 175%, and 200%. Pass `classes:''` for 100%. Edit your `'css/custom.css'` file to add additional classes.
+2. If you want the same module twice on one slide, both must have the same `carouselId`.
 
 ## Navigation from other modules
 
