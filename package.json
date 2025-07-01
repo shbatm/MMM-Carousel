@@ -30,6 +30,7 @@
     }
   ],
   "main": "MMM-Carousel.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint --fix && prettier --write .",
