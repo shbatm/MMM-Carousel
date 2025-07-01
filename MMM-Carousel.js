@@ -77,6 +77,8 @@ Module.register("MMM-Carousel", {
     slides: [[]],
     showPageIndicators: true,
     showPageControls: true,
+    // Individual slide timings configuration
+    timings: {},
     // MMM-KeyBindings mapping.
     keyBindings: {
       enabled: true
@@ -258,12 +260,19 @@ Module.register("MMM-Carousel", {
     modules.showPageControls = this.config.showPageControls;
     modules.slideFadeInSpeed = this.config.slideFadeInSpeed;
     modules.slideFadeOutSpeed = this.config.slideFadeOutSpeed;
+    // Add timings configuration to modules object
+    modules.timings = this.config.timings;
+    modules.defaultTimer = timer;
     this.moduleTransition.call(modules);
 
     // Reference to function for manual transitions
     this.manualTransition = this.moduleTransition.bind(modules);
 
-    if (
+    // Check if individual timings should be used
+    if (this.config.mode === "slides" && Object.keys(this.config.timings).length > 0) {
+      // Use individual timings - don't set standard timer
+      this.useIndividualTimings = true;
+    } else if (
       this.config.mode !== "slides" ||
       this.config.mode === "slides" && timer > 0
     ) {
@@ -336,6 +345,11 @@ Module.register("MMM-Carousel", {
 
     Log.debug(`[MMM-Carousel] Transitioning to slide ${this.currentIndex}`);
     globalThis.sendNotification("CAROUSEL_CHANGED", {slide: this.currentIndex});
+
+    // Schedule next slide transition with individual timing
+    if (this.slides !== undefined && Object.keys(this.timings).length > 0) {
+      globalThis.scheduleNextTransition(this.currentIndex);
+    }
 
     /*
      * selectWrapper(position)
@@ -489,7 +503,11 @@ Module.register("MMM-Carousel", {
   },
 
   restartTimer () {
-    if (this.config.transitionInterval > 0) {
+    if (this.config.mode === "slides" && Object.keys(this.config.timings).length > 0) {
+      // Use individual slide timings
+      this.updatePause(false);
+      this.scheduleNextTransition(this.currentIndex || 0);
+    } else if (this.config.transitionInterval > 0) {
       this.updatePause(false);
       // Restart the timer
       clearInterval(this.transitionTimer);
@@ -558,6 +576,33 @@ Module.register("MMM-Carousel", {
     // Perform the manual transition
     this.manualTransition(slideNum);
     this.restartTimer();
+  },
+
+  scheduleNextTransition (currentSlideIndex) {
+    // Clear existing timer
+    if (this.transitionTimer) {
+      clearInterval(this.transitionTimer);
+      clearTimeout(this.transitionTimer);
+    }
+
+    // Get the timer for the current slide
+    const slideTimer = this.getSlideTimer(currentSlideIndex);
+
+    if (slideTimer > 0) {
+      this.transitionTimer = setTimeout(() => {
+        this.manualTransition();
+      }, slideTimer);
+    }
+  },
+
+  getSlideTimer (slideIndex) {
+    // Check if we have individual timing for this slide
+    if (this.config.timings && typeof this.config.timings[slideIndex] === "number") {
+      return this.config.timings[slideIndex];
+    }
+
+    // Fall back to transitionInterval
+    return this.config.transitionInterval;
   },
 
   getStyles () {
