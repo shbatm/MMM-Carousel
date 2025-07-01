@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0](https://github.com/shbatm/MMM-Carousel/compare/v0.5.7...v0.6.0) ― 2025-07-01 ― Feature Release
+
+- feat: add individual slide timings configuration
+  Checkout the new `timings` option in the [README](README.md).
+- chore: add missing `type` field in to `package.json`
+- chore: update devDependencies
+
 ## [0.5.7](https://github.com/shbatm/MMM-Carousel/compare/v0.5.6...v0.5.7) ― 2025-06-01 ― Maintenance Release
 
 - chore: add `lint-staged` and `husky` to lint staged files
