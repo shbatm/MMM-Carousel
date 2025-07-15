@@ -47,14 +47,18 @@ To use this module, add the following configuration block to the modules array i
 ```js
     {
       module: "MMM-Carousel",
-      position: "bottom_bar", // Required to draw in position
+      position: "bottom_bar",
       config: {
         // See below for configurable options
       }
     },
 ```
 
-Note that a `position` setting is required only if you want to show the page navigation icons and buttons.
+### Position setting
+
+The `position` setting is required and should be set to one of the available MagicMirror positions, such as `top_bar`, `bottom_bar`, `top_left`, `top_right`, `middle_center`, etc. This determines where the page indication will be displayed on your MagicMirror.
+
+Even if you don't want to show the page indication, you still need to specify a position.
 
 ### Configuration options
 
@@ -82,6 +86,7 @@ The following properties can be configured:
 ```javascript
     {
       module: "MMM-Carousel",
+      position: "bottom_bar",
       config: {
         transitionInterval: 10000,
         ignoreModules: ["clock"],
@@ -95,6 +100,7 @@ The following properties can be configured:
 ```javascript
     {
       module: "MMM-Carousel",
+      position: "bottom_bar",
       config: {
         transitionInterval: 10000,
         ignoreModules: [],
@@ -114,7 +120,7 @@ The following properties can be configured:
 ```javascript
     {
       module: "MMM-Carousel",
-      position: "bottom_bar", // Required only for navigation controls
+      position: "bottom_bar",
       config: {
         transitionInterval: 10000,
         showPageIndicators: true,
@@ -140,7 +146,7 @@ The following properties can be configured:
 ```javascript
     {
       module: "MMM-Carousel",
-      position: "bottom_bar", // Required only for navigation controls
+      position: "bottom_bar",
       config: {
         transitionInterval: 10000,
         ignoreModules: ["clock", "alert"],
