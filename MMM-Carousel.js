@@ -398,7 +398,6 @@ Module.register("MMM-Carousel", {
                 lockString: "mmmc"
               });
               show = true;
-              break;
             } else if (
               typeof mods[s] === "object" &&
               "name" in mods[s] &&
@@ -409,37 +408,36 @@ Module.register("MMM-Carousel", {
              * check if carouselId is set (multiple module instances) and this is not the one we should show
              */
               if (
-                typeof mods[s].carouselId !== "undefined" &&
-                typeof this[i].data.config.carouselId !== "undefined" &&
-                mods[s].carouselId !== this[i].data.config.carouselId
+                typeof mods[s].carouselId === "undefined" ||
+                typeof this[i].data.config.carouselId === "undefined" ||
+                mods[s].carouselId === this[i].data.config.carouselId
               ) {
-                break;
-              }
-              if (typeof mods[s].classes === "string") {
-              // Check if we have any classes we're supposed to add
-                const dom = document.getElementById(this[i].identifier);
-                // Remove any classes added by this module (other slides)
-                [dom.className] = dom.className.split("mmmc");
-                if (mods[s].classes) {
-                /*
-                 * Check for an empty classes tag (required to remove classes added from other slides)
-                 * If we have a valid class list, add the classes
-                 */
-                  dom.classList.add("mmmc");
-                  dom.classList.add(mods[s].classes);
+                // This module instance should be shown
+                if (typeof mods[s].classes === "string") {
+                // Check if we have any classes we're supposed to add
+                  const dom = document.getElementById(this[i].identifier);
+                  // Remove any classes added by this module (other slides)
+                  [dom.className] = dom.className.split("mmmc");
+                  if (mods[s].classes) {
+                  /*
+                   * Check for an empty classes tag (required to remove classes added from other slides)
+                   * If we have a valid class list, add the classes
+                   */
+                    dom.classList.add("mmmc");
+                    dom.classList.add(mods[s].classes);
+                  }
                 }
-              }
 
-              if (typeof mods[s].position === "string") {
-              // Check if we were given a position to change, if so, move the module to the new position
-                selectWrapper(mods[s].position).appendChild(document.getElementById(this[i].identifier));
+                if (typeof mods[s].position === "string") {
+                // Check if we were given a position to change, if so, move the module to the new position
+                  selectWrapper(mods[s].position).appendChild(document.getElementById(this[i].identifier));
+                }
+                // Finally show the module
+                this[i].show(this.slideFadeInSpeed, false, {
+                  lockString: "mmmc"
+                });
+                show = true;
               }
-              // Finally show the module
-              this[i].show(this.slideFadeInSpeed, false, {
-                lockString: "mmmc"
-              });
-              show = true;
-              break;
             }
           }
           // The module is not in this slide.
