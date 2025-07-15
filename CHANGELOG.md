@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1](https://github.com/shbatm/MMM-Carousel/compare/v0.6.0...v0.6.1) ― 2025-07-15
+
+- chore: add `husky` as a devDependency
+  This is required for the `lint-staged` configuration to work properly.
+- chore: update devDependencies
+- docs: clarify position setting requirement in README.md
+  Reported here [shbatm/MMM-Carousel#37](https://github.com/shbatm/MMM-Carousel/issues/37).
+- docs: describe CAROUSEL_PLAYPAUSE notification
+  Reported here [shbatm/MMM-Carousel#27](https://github.com/shbatm/MMM-Carousel/issues/27).
+- fix: allow multiple instances of the same module on one slide
+  This fixes [#34](https://github.com/shbatm/MMM-Carousel/issues/34) and [#36](https://github.com/shbatm/MMM-Carousel/issues/36).
+
 ## [0.6.0](https://github.com/shbatm/MMM-Carousel/compare/v0.5.7...v0.6.0) ― 2025-07-01 ― Feature Release
 
 - feat: add individual slide timings configuration
