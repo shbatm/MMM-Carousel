@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.1](https://github.com/shbatm/MMM-Carousel/compare/v0.6.0...v0.6.1) ― 2025-07-15
+## [0.6.2](https://github.com/shbatm/MMM-Carousel/compare/v0.6.1...v0.6.2) ― 2025-09-01 ― Maintenance Release
+
+- chore: update actions/checkout to v5 in automated tests workflow
+- chore: update devDependencies
+
+## [0.6.1](https://github.com/shbatm/MMM-Carousel/compare/v0.6.0...v0.6.1) ― 2025-07-15 ― Fix Release
 
 - chore: add `husky` as a devDependency
   This is required for the `lint-staged` configuration to work properly.
@@ -77,7 +82,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - chore: Add introduction notes to CHANGELOG
 - chore: Update devDependencies
 
-## [0.5.0] ― 2024-11-21
+## [0.5.0] ― 2024-11-21 ― Feature Release
 
 - feature: Add "CAROUSEL_CHANGED" notification
 - docs: Optimize configuration examples
@@ -93,18 +98,18 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - chore: Update devDependencies
 - docs: Update LICENSE file
 
-## [0.4.0] ― 2024-10-23
+## [0.4.0] ― 2024-10-23 ― Feature Release
 
 - Add fade-out effect (by new option `slideFadeOutSpeed`) to slides #96. Thanks to @dennisklad!
   - With this the option `slideTransitionSpeed` gets replaced by `slideFadeInSpeed`.
 - Upgrade ESLint
 - Update devDependencies
 
-## [0.3.2] ― 2023-09-11
+## [0.3.2] ― 2023-09-11 ― Feature Release
 
 - Added Play/Pause Control (#70)
 
-## [0.3.1] ― 2023-06-19
+## [0.3.1] ― 2023-06-19 ― Maintenance Release
 
 - Fix transitionTimeoutCallback by @btastic (#66)
 - Use screenshots instead of photos (#54)
