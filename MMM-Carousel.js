@@ -1,6 +1,6 @@
 /* global Module Log MM KeyHandler */
 
-let carouselInstance;
+let carouselInstance = null;
 
 Module.register("MMM-Carousel", {
   defaults: {
@@ -710,7 +710,7 @@ Module.register("MMM-Carousel", {
    */
   transitionTimeoutCallback () {
     let goToIndex = -1;
-    let goToSlide;
+    let goToSlide = null;
     if (typeof this.config.homeSlide === "number") {
       goToIndex = this.config.homeSlide;
     } else if (typeof this.config.homeSlide === "string") {

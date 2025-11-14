@@ -31,16 +31,13 @@ export default defineConfig([
       "capitalized-comments": "off",
       "consistent-this": "off",
       "curly": ["error", "multi-line"],
-      "init-declarations": "off",
-      "max-depth": ["error", 7],
       "max-lines": "off",
       "max-lines-per-function": ["error", 70],
       "max-statements": ["error", 50],
       "no-inline-comments": "off",
       "no-magic-numbers": "off",
       "one-var": ["error", "never"],
-      "sort-keys": "off",
-      "strict": "off"
+      "sort-keys": "off"
     }
   },
   {
@@ -59,8 +56,8 @@ export default defineConfig([
       "@stylistic/indent": ["error", 2],
       "@stylistic/object-property-newline": ["error", {"allowAllPropertiesOnSameLine": true}],
       "@stylistic/padded-blocks": ["error", "never"],
-      "max-lines-per-function": ["error", 100],
       "import-x/no-unresolved": ["error", {"ignore": ["eslint/config"]}],
+      "max-lines-per-function": ["error", 100],
       "no-magic-numbers": "off",
       "one-var": ["error", "never"],
       "sort-keys": "off"
