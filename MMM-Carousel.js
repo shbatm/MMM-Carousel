@@ -768,11 +768,11 @@ Module.register("MMM-Carousel", {
   },
 
   /*
-   * getDom()
-   * This method generates the DOM which needs to be displayed. This method is called by the MagicMirror² core.
-   * This method needs to be subclassed if the module wants to display info on the mirror.
+   * Generate the DOM which needs to be displayed.
+   * This method is called by the MagicMirror² core and needs to be subclassed
+   * if the module wants to display info on the mirror.
    *
-   * return DOM object - The DOM to display.
+   * @returns {HTMLElement} The DOM element to display
    */
   getDom () {
     const div = document.createElement("div");

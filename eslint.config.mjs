@@ -28,7 +28,6 @@ export default defineConfig([
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "as-needed"],
       "camelcase": ["error", {"allow": ["bottom_", "fullscreen_", "lower_", "middle_center", "top_", "upper_third"]}],
-      "capitalized-comments": "off",
       "consistent-this": "off",
       "curly": ["error", "multi-line"],
       "max-lines": "off",
