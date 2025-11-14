@@ -171,11 +171,11 @@ Module.register("MMM-Carousel", {
     };
 
     if (this.config.mode === "slides") {
-      Object.keys(this.config.slides).forEach((s) => {
-        api.actions[s.replace(/\s/gu, "").toLowerCase()] = {
+      Object.keys(this.config.slides).forEach((slideName) => {
+        api.actions[slideName.replace(/\s/gu, "").toLowerCase()] = {
           notification: "CAROUSEL_GOTO",
-          payload: {slide: s},
-          prettyName: `Go To Slide ${s}`
+          payload: {slide: slideName},
+          prettyName: `Go To Slide ${slideName}`
         };
       });
     }
@@ -394,13 +394,13 @@ Module.register("MMM-Carousel", {
 
     if (goToSlide) {
       Log.log(`[MMM-Carousel] In goToSlide, current slide index${modulesContext.currentIndex}`);
-      Object.keys(modulesContext.slides).find((s, j) => {
-        if (goToSlide === s) {
-          if (j === modulesContext.currentIndex) {
+      Object.keys(modulesContext.slides).find((slideName, slideIndex) => {
+        if (goToSlide === slideName) {
+          if (slideIndex === modulesContext.currentIndex) {
             Log.log("[MMM-Carousel] No change, requested slide is the same.");
             noChange = true;
           } else {
-            nextIndex = j;
+            nextIndex = slideIndex;
           }
           return true;
         }
@@ -510,8 +510,8 @@ Module.register("MMM-Carousel", {
     if (modulesContext.showPageIndicators) {
       const currPages = document.getElementsByClassName("mmm-carousel-current-page");
       if (currPages && currPages.length > 0) {
-        for (let i = 0; i < currPages.length; i += 1) {
-          currPages[i].classList.remove("mmm-carousel-current-page");
+        for (let pageIndex = 0; pageIndex < currPages.length; pageIndex += 1) {
+          currPages[pageIndex].classList.remove("mmm-carousel-current-page");
         }
       }
       const currentLabel = document.getElementById(`sliderLabel_${modulesContext.currentIndex}`);
@@ -556,32 +556,32 @@ Module.register("MMM-Carousel", {
    * @param {Function} selectWrapper - Function to select position wrapper DOM element
    */
   showModulesForSlide (modulesContext, selectWrapper) {
-    for (let i = 0; i < modulesContext.length; i += 1) {
-      Log.debug(`[MMM-Carousel] Processing ${modulesContext[i].name}`);
+    for (let moduleIndex = 0; moduleIndex < modulesContext.length; moduleIndex += 1) {
+      Log.debug(`[MMM-Carousel] Processing ${modulesContext[moduleIndex].name}`);
 
       // Simple mode: show only current index
       if (modulesContext.slides === undefined) {
-        if (i === modulesContext.currentIndex) {
-          modulesContext[i].show(modulesContext.slideFadeInSpeed, false, {lockString: "mmmc"});
+        if (moduleIndex === modulesContext.currentIndex) {
+          modulesContext[moduleIndex].show(modulesContext.slideFadeInSpeed, false, {lockString: "mmmc"});
         } else {
-          modulesContext[i].hide(0, false, {lockString: "mmmc"});
+          modulesContext[moduleIndex].hide(0, false, {lockString: "mmmc"});
         }
       } else {
         // Slides mode: check each module against slide config
         const mods = modulesContext.slides[Object.keys(modulesContext.slides)[modulesContext.currentIndex]];
         let show = false;
 
-        for (let s = 0; s < mods.length; s += 1) {
-          if (carouselInstance.shouldShowModuleInSlide(modulesContext[i], mods[s])) {
-            carouselInstance.applyModuleStyles(modulesContext[i], mods[s], selectWrapper);
-            modulesContext[i].show(modulesContext.slideFadeInSpeed, false, {lockString: "mmmc"});
+        for (let slideConfigIndex = 0; slideConfigIndex < mods.length; slideConfigIndex += 1) {
+          if (carouselInstance.shouldShowModuleInSlide(modulesContext[moduleIndex], mods[slideConfigIndex])) {
+            carouselInstance.applyModuleStyles(modulesContext[moduleIndex], mods[slideConfigIndex], selectWrapper);
+            modulesContext[moduleIndex].show(modulesContext.slideFadeInSpeed, false, {lockString: "mmmc"});
             show = true;
             break;
           }
         }
 
         if (!show) {
-          modulesContext[i].hide(0, false, {lockString: "mmmc"});
+          modulesContext[moduleIndex].hide(0, false, {lockString: "mmmc"});
         }
       }
     }
@@ -637,8 +637,8 @@ Module.register("MMM-Carousel", {
     };
 
     // First, hide all modules
-    for (let i = 0; i < this.length; i += 1) {
-      this[i].hide(this.slideFadeOutSpeed, false, {lockString: "mmmc"});
+    for (let moduleIndex = 0; moduleIndex < this.length; moduleIndex += 1) {
+      this[moduleIndex].hide(this.slideFadeOutSpeed, false, {lockString: "mmmc"});
     }
 
     // Then show appropriate modules after fade out
@@ -789,21 +789,21 @@ Module.register("MMM-Carousel", {
       const paginationWrapper = document.createElement("div");
       paginationWrapper.className = "slider-pagination";
 
-      for (let i = 0; i < Object.keys(this.config.slides).length; i += 1) {
+      for (let slideIndex = 0; slideIndex < Object.keys(this.config.slides).length; slideIndex += 1) {
         const input = document.createElement("input");
         input.type = "radio";
         input.name = "slider";
-        input.id = `slider_${i}`;
+        input.id = `slider_${slideIndex}`;
         input.className = "slide-radio";
-        input.onchange = this.makeOnChangeHandler(i);
+        input.onchange = this.makeOnChangeHandler(slideIndex);
         paginationWrapper.appendChild(input);
       }
 
       if (this.config.showPageIndicators) {
-        for (let i = 0; i < Object.keys(this.config.slides).length; i += 1) {
+        for (let slideIndex = 0; slideIndex < Object.keys(this.config.slides).length; slideIndex += 1) {
           const label = document.createElement("label");
-          label.setAttribute("for", `slider_${i}`);
-          label.id = `sliderLabel_${i}`;
+          label.setAttribute("for", `slider_${slideIndex}`);
+          label.id = `sliderLabel_${slideIndex}`;
           paginationWrapper.appendChild(label);
         }
       }
@@ -817,21 +817,21 @@ Module.register("MMM-Carousel", {
         const previousWrapper = document.createElement("div");
         previousWrapper.className = "previous control";
 
-        for (let j = 0; j < Object.keys(this.config.slides).length; j += 1) {
-          if (j !== 0) {
+        for (let slideIndex = 0; slideIndex < Object.keys(this.config.slides).length; slideIndex += 1) {
+          if (slideIndex !== 0) {
             const nCtrlLabelWrapper = document.createElement("label");
-            nCtrlLabelWrapper.setAttribute("for", `slider_${j}`);
-            nCtrlLabelWrapper.id = `sliderNextBtn_${j}`;
+            nCtrlLabelWrapper.setAttribute("for", `slider_${slideIndex}`);
+            nCtrlLabelWrapper.id = `sliderNextBtn_${slideIndex}`;
             const arrow = document.createElement("span");
             arrow.className = "carousel-arrow carousel-arrow-right";
             nCtrlLabelWrapper.appendChild(arrow);
             nextWrapper.appendChild(nCtrlLabelWrapper);
           }
 
-          if (j !== Object.keys(this.config.slides).length - 1) {
+          if (slideIndex !== Object.keys(this.config.slides).length - 1) {
             const pCtrlLabelWrapper = document.createElement("label");
-            pCtrlLabelWrapper.setAttribute("for", `slider_${j}`);
-            pCtrlLabelWrapper.id = `sliderPrevBtn_${j}`;
+            pCtrlLabelWrapper.setAttribute("for", `slider_${slideIndex}`);
+            pCtrlLabelWrapper.id = `sliderPrevBtn_${slideIndex}`;
             const arrow = document.createElement("span");
             arrow.className = "carousel-arrow carousel-arrow-left";
             pCtrlLabelWrapper.appendChild(arrow);

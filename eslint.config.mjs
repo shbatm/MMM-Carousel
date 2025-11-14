@@ -31,7 +31,6 @@ export default defineConfig([
       "capitalized-comments": "off",
       "consistent-this": "off",
       "curly": ["error", "multi-line"],
-      "id-length": ["error", {"exceptions": ["_", "i", "j", "s"], "min": 2}],
       "init-declarations": "off",
       "max-depth": ["error", 7],
       "max-lines": "off",
