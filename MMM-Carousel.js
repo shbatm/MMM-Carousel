@@ -210,6 +210,7 @@ Module.register("MMM-Carousel", {
       this.restartTimer();
     } else if (notification === "CAROUSEL_PREVIOUS") {
       this.manualTransition(undefined, -1);
+      this.restartTimer();
     } else if (notification === "CAROUSEL_PLAYPAUSE") {
       this.toggleTimer();
     } else if (notification === "CAROUSEL_GOTO") {
