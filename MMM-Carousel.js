@@ -343,7 +343,7 @@ Module.register("MMM-Carousel", {
       this.config.mode !== "slides" ||
       this.config.mode === "slides" && timer > 0
     ) {
-      /*
+      /**
        * We set a timer to cause the page transitions
        * If we're in slides mode and the timer is set to 0, we only use manual transitions
        */
@@ -359,7 +359,7 @@ Module.register("MMM-Carousel", {
     }
   },
 
-  /*
+  /**
    * Calculate the next slide index based on navigation parameters
    * @param {object} modulesContext - The modules array context with currentIndex and slides properties
    * @param {object} params - Navigation parameters
@@ -420,7 +420,7 @@ Module.register("MMM-Carousel", {
     };
   },
 
-  /*
+  /**
    * Check if a module should be shown in the current slide
    * @param {object} module - The MagicMirror module instance to check
    * @param {string|object} slideConfig - Slide configuration (module name string or config object with name and optional carouselId)
@@ -445,7 +445,7 @@ Module.register("MMM-Carousel", {
     return false;
   },
 
-  /*
+  /**
    * Apply CSS classes and position changes to a module
    * @param {object} module - The MagicMirror module instance to style
    * @param {object} slideConfig - Slide configuration object with optional classes and position properties
@@ -477,7 +477,7 @@ Module.register("MMM-Carousel", {
     }
   },
 
-  /*
+  /**
    * Update slide indicators (pagination dots and navigation buttons)
    * @param {object} modulesContext - The modules array context with currentIndex, slides, showPageIndicators, and showPageControls properties
    * @param {number} resetCurrentIndex - Total number of slides (for boundary checks)
@@ -704,9 +704,9 @@ Module.register("MMM-Carousel", {
     }
   },
 
-  /*
-   * This is called when the module is loaded and the DOM is ready.
-   * This is the first method called after the module has been registered.
+  /**
+   * Handle timeout callback to return to home slide
+   * This is called when the transitionTimeout expires after manual navigation.
    */
   transitionTimeoutCallback () {
     let goToIndex = -1;
@@ -767,7 +767,50 @@ Module.register("MMM-Carousel", {
     };
   },
 
-  /*
+  /**
+   * Creates page control elements (next/previous buttons) for the carousel.
+   *
+   * @param {number} slideCount - Total number of slides in the carousel.
+   * @returns {object} Object with next and previous wrapper elements.
+   */
+  createPageControls (slideCount) {
+    const nextWrapper = document.createElement("div");
+    nextWrapper.className = "next control";
+
+    const previousWrapper = document.createElement("div");
+    previousWrapper.className = "previous control";
+
+    for (let slideIndex = 0; slideIndex < slideCount; slideIndex += 1) {
+      const isNotFirstSlide = slideIndex > 0;
+      if (isNotFirstSlide) {
+        const nCtrlLabelWrapper = document.createElement("label");
+        nCtrlLabelWrapper.setAttribute("for", `slider_${slideIndex}`);
+        nCtrlLabelWrapper.id = `sliderNextBtn_${slideIndex}`;
+        const arrow = document.createElement("span");
+        arrow.className = "carousel-arrow carousel-arrow-right";
+        nCtrlLabelWrapper.appendChild(arrow);
+        nextWrapper.appendChild(nCtrlLabelWrapper);
+      }
+
+      const isNotLastSlide = slideIndex < slideCount - 1;
+      if (isNotLastSlide) {
+        const pCtrlLabelWrapper = document.createElement("label");
+        pCtrlLabelWrapper.setAttribute("for", `slider_${slideIndex}`);
+        pCtrlLabelWrapper.id = `sliderPrevBtn_${slideIndex}`;
+        const arrow = document.createElement("span");
+        arrow.className = "carousel-arrow carousel-arrow-left";
+        pCtrlLabelWrapper.appendChild(arrow);
+        previousWrapper.appendChild(pCtrlLabelWrapper);
+      }
+    }
+
+    return {
+      nextWrapper,
+      previousWrapper
+    };
+  },
+
+  /**
    * Generate the DOM which needs to be displayed.
    * This method is called by the MagicMirror² core and needs to be subclassed
    * if the module wants to display info on the mirror.
@@ -786,7 +829,9 @@ Module.register("MMM-Carousel", {
       const paginationWrapper = document.createElement("div");
       paginationWrapper.className = "slider-pagination";
 
-      for (let slideIndex = 0; slideIndex < Object.keys(this.config.slides).length; slideIndex += 1) {
+      const slideCount = Object.keys(this.config.slides).length;
+
+      for (let slideIndex = 0; slideIndex < slideCount; slideIndex += 1) {
         const input = document.createElement("input");
         input.type = "radio";
         input.name = "slider";
@@ -797,7 +842,7 @@ Module.register("MMM-Carousel", {
       }
 
       if (this.config.showPageIndicators) {
-        for (let slideIndex = 0; slideIndex < Object.keys(this.config.slides).length; slideIndex += 1) {
+        for (let slideIndex = 0; slideIndex < slideCount; slideIndex += 1) {
           const label = document.createElement("label");
           label.setAttribute("for", `slider_${slideIndex}`);
           label.id = `sliderLabel_${slideIndex}`;
@@ -808,35 +853,10 @@ Module.register("MMM-Carousel", {
       div.appendChild(paginationWrapper);
 
       if (this.config.showPageControls) {
-        const nextWrapper = document.createElement("div");
-        nextWrapper.className = "next control";
-
-        const previousWrapper = document.createElement("div");
-        previousWrapper.className = "previous control";
-
-        for (let slideIndex = 0; slideIndex < Object.keys(this.config.slides).length; slideIndex += 1) {
-          const isNotFirstSlide = slideIndex > 0;
-          if (isNotFirstSlide) {
-            const nCtrlLabelWrapper = document.createElement("label");
-            nCtrlLabelWrapper.setAttribute("for", `slider_${slideIndex}`);
-            nCtrlLabelWrapper.id = `sliderNextBtn_${slideIndex}`;
-            const arrow = document.createElement("span");
-            arrow.className = "carousel-arrow carousel-arrow-right";
-            nCtrlLabelWrapper.appendChild(arrow);
-            nextWrapper.appendChild(nCtrlLabelWrapper);
-          }
-
-          const isNotLastSlide = slideIndex < Object.keys(this.config.slides).length - 1;
-          if (isNotLastSlide) {
-            const pCtrlLabelWrapper = document.createElement("label");
-            pCtrlLabelWrapper.setAttribute("for", `slider_${slideIndex}`);
-            pCtrlLabelWrapper.id = `sliderPrevBtn_${slideIndex}`;
-            const arrow = document.createElement("span");
-            arrow.className = "carousel-arrow carousel-arrow-left";
-            pCtrlLabelWrapper.appendChild(arrow);
-            previousWrapper.appendChild(pCtrlLabelWrapper);
-          }
-        }
+        const {
+          nextWrapper,
+          previousWrapper
+        } = this.createPageControls(slideCount);
 
         div.appendChild(nextWrapper);
         div.appendChild(previousWrapper);
