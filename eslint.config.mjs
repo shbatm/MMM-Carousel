@@ -38,7 +38,6 @@ export default defineConfig([
       "max-statements": ["error", 50],
       "no-inline-comments": "off",
       "no-magic-numbers": "off",
-      "no-undefined": "off",
       "one-var": ["error", "never"],
       "prefer-named-capture-group": "off",
       "sort-keys": "off",

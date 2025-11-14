@@ -11,68 +11,55 @@ Module.register("MMM-Carousel", {
     mode: "global", // global || positional || slides
     top_bar: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     top_left: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     top_center: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     top_right: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     upper_third: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     middle_center: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     lower_third: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     bottom_left: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     bottom_center: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     bottom_right: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     bottom_bar: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     fullscreen_above: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     fullscreen_below: {
       enabled: false,
-      ignoreModules: [],
-      overrideTransitionInterval: undefined
+      ignoreModules: []
     },
     slides: [[]],
     showPageIndicators: true,
@@ -105,10 +92,10 @@ Module.register("MMM-Carousel", {
 
   validKeyPress (kp) {
     if (kp.keyName === this.keyHandler.config.map.NextSlide) {
-      this.manualTransition(undefined, 1);
+      this.manualTransition(null, 1);
       this.restartTimer();
     } else if (kp.keyName === this.keyHandler.config.map.PrevSlide) {
-      this.manualTransition(undefined, -1);
+      this.manualTransition(null, -1);
       this.restartTimer();
     } else if (kp.keyName === this.keyHandler.config.map.Pause) {
       this.toggleTimer();
@@ -236,11 +223,11 @@ Module.register("MMM-Carousel", {
         Log.debug(`[MMM-Carousel] notification ${notification} from ${sender.name}`);
         break;
       case "CAROUSEL_NEXT":
-        this.manualTransition(undefined, 1);
+        this.manualTransition(null, 1);
         this.restartTimer();
         break;
       case "CAROUSEL_PREVIOUS":
-        this.manualTransition(undefined, -1);
+        this.manualTransition(null, -1);
         this.restartTimer();
         break;
       case "CAROUSEL_PLAYPAUSE":
@@ -269,7 +256,7 @@ Module.register("MMM-Carousel", {
       if (this.transitionTimer) {
         clearInterval(this.transitionTimer);
         clearTimeout(this.transitionTimer);
-        this.transitionTimer = undefined;
+        this.transitionTimer = null;
       }
     } else {
       Log.info("[MMM-Carousel] Switched to automatic mode - starting automatic rotation");
@@ -292,7 +279,7 @@ Module.register("MMM-Carousel", {
       }
     } else if (typeof payload === "object") {
       try {
-        this.manualTransition(undefined, 0, payload.slide);
+        this.manualTransition(null, 0, payload.slide);
         this.restartTimer();
       } catch {
         Log.error(`Could not navigate to slide ${payload.slide}`);
@@ -327,7 +314,7 @@ Module.register("MMM-Carousel", {
 
     if (positionIndex !== null) {
       if (
-        this.config[positionIndex].overrideTransitionInterval !== undefined &&
+        "overrideTransitionInterval" in this.config[positionIndex] &&
         this.config[positionIndex].overrideTransitionInterval > 0
       ) {
         timer = this.config[positionIndex].overrideTransitionInterval;
@@ -496,7 +483,13 @@ Module.register("MMM-Carousel", {
    * @param {number} resetCurrentIndex - Total number of slides (for boundary checks)
    */
   updateSlideIndicators (modulesContext, resetCurrentIndex) {
-    if (modulesContext.slides === undefined || !modulesContext.showPageIndicators && !modulesContext.showPageControls) {
+    // Early return if slides don't exist
+    if (!modulesContext.slides) {
+      return;
+    }
+
+    // Early return if neither page indicators nor page controls should be shown
+    if (!modulesContext.showPageIndicators && !modulesContext.showPageControls) {
       return;
     }
 
@@ -529,7 +522,8 @@ Module.register("MMM-Carousel", {
           currBtns[0].classList.remove("mmm-carousel-available");
         }
       }
-      if (modulesContext.currentIndex !== resetCurrentIndex - 1) {
+      const isNotLastSlide = modulesContext.currentIndex < resetCurrentIndex - 1;
+      if (isNotLastSlide) {
         Log.debug(`[MMM-Carousel] Trying to enable button sliderNextBtn_${modulesContext.currentIndex + 1}`);
         const nextButton = document.getElementById(`sliderNextBtn_${modulesContext.currentIndex + 1}`);
         if (nextButton) {
@@ -538,7 +532,8 @@ Module.register("MMM-Carousel", {
           Log.warn(`[MMM-Carousel] Missing next button for index ${modulesContext.currentIndex + 1}`);
         }
       }
-      if (modulesContext.currentIndex !== 0) {
+      const isNotFirstSlide = modulesContext.currentIndex > 0;
+      if (isNotFirstSlide) {
         Log.debug(`[MMM-Carousel] Trying to enable button sliderPrevBtn_${modulesContext.currentIndex - 1}`);
         const prevButton = document.getElementById(`sliderPrevBtn_${modulesContext.currentIndex - 1}`);
         if (prevButton) {
@@ -559,15 +554,8 @@ Module.register("MMM-Carousel", {
     for (let moduleIndex = 0; moduleIndex < modulesContext.length; moduleIndex += 1) {
       Log.debug(`[MMM-Carousel] Processing ${modulesContext[moduleIndex].name}`);
 
-      // Simple mode: show only current index
-      if (modulesContext.slides === undefined) {
-        if (moduleIndex === modulesContext.currentIndex) {
-          modulesContext[moduleIndex].show(modulesContext.slideFadeInSpeed, false, {lockString: "mmmc"});
-        } else {
-          modulesContext[moduleIndex].hide(0, false, {lockString: "mmmc"});
-        }
-      } else {
-        // Slides mode: check each module against slide config
+      // Slides mode: check each module against slide config
+      if (modulesContext.slides) {
         const mods = modulesContext.slides[Object.keys(modulesContext.slides)[modulesContext.currentIndex]];
         let show = false;
 
@@ -583,6 +571,11 @@ Module.register("MMM-Carousel", {
         if (!show) {
           modulesContext[moduleIndex].hide(0, false, {lockString: "mmmc"});
         }
+      } else if (moduleIndex === modulesContext.currentIndex) {
+        // Simple mode: show only current index
+        modulesContext[moduleIndex].show(modulesContext.slideFadeInSpeed, false, {lockString: "mmmc"});
+      } else {
+        modulesContext[moduleIndex].hide(0, false, {lockString: "mmmc"});
       }
     }
   },
@@ -590,20 +583,24 @@ Module.register("MMM-Carousel", {
   /**
    * Transition between carousel slides
    * This method is called with the modules array as context (via bind/call)
-   * @param {number} [goToIndex=-1] - Target slide index (-1 for relative navigation)
-   * @param {number} [goDirection=0] - Direction offset for relative navigation (e.g., 1 for next, -1 for previous)
+   * @param {number} [goToIndex] - Target slide index (defaults to -1 for relative navigation)
+   * @param {number} [goDirection] - Direction offset for relative navigation (defaults to 0, e.g., 1 for next, -1 for previous)
    * @param {string} [goToSlide] - Target slide name (for named slide navigation)
    */
-  moduleTransition (goToIndex = -1, goDirection = 0, goToSlide = undefined) {
+  moduleTransition (goToIndex, goDirection, goToSlide) {
+    // Set defaults for optional parameters
+    const targetIndex = goToIndex ?? -1;
+    const direction = goDirection ?? 0;
+
     let resetCurrentIndex = this.length;
-    if (this.slides !== undefined) {
+    if (this.slides) {
       resetCurrentIndex = Object.keys(this.slides).length;
     }
 
     // Calculate next index
     const result = carouselInstance.calculateNextIndex(this, {
-      goToIndex,
-      goDirection,
+      goToIndex: targetIndex,
+      goDirection: direction,
       goToSlide,
       resetCurrentIndex
     });
@@ -619,7 +616,7 @@ Module.register("MMM-Carousel", {
     carouselInstance.sendNotification("CAROUSEL_CHANGED", {slide: this.currentIndex});
 
     // Schedule next slide transition with individual timing (only in automatic mode)
-    if (this.slides !== undefined && Object.keys(this.timings).length > 0 && !carouselInstance.isManualMode) {
+    if (this.slides && Object.keys(this.timings).length > 0 && !carouselInstance.isManualMode) {
       carouselInstance.scheduleNextTransition(this.currentIndex);
     }
 
@@ -699,7 +696,7 @@ Module.register("MMM-Carousel", {
       this.updatePause(true);
       clearInterval(this.transitionTimer);
       clearTimeout(this.transitionTimer);
-      this.transitionTimer = undefined;
+      this.transitionTimer = null;
     } else {
       // Timer is paused - restart it
       this.updatePause(false);
@@ -721,7 +718,7 @@ Module.register("MMM-Carousel", {
     } else {
       goToIndex = 0;
     }
-    this.manualTransition(goToIndex, undefined, goToSlide);
+    this.manualTransition(goToIndex, null, goToSlide);
     this.restartTimer();
   },
 
@@ -818,7 +815,8 @@ Module.register("MMM-Carousel", {
         previousWrapper.className = "previous control";
 
         for (let slideIndex = 0; slideIndex < Object.keys(this.config.slides).length; slideIndex += 1) {
-          if (slideIndex !== 0) {
+          const isNotFirstSlide = slideIndex > 0;
+          if (isNotFirstSlide) {
             const nCtrlLabelWrapper = document.createElement("label");
             nCtrlLabelWrapper.setAttribute("for", `slider_${slideIndex}`);
             nCtrlLabelWrapper.id = `sliderNextBtn_${slideIndex}`;
@@ -828,7 +826,8 @@ Module.register("MMM-Carousel", {
             nextWrapper.appendChild(nCtrlLabelWrapper);
           }
 
-          if (slideIndex !== Object.keys(this.config.slides).length - 1) {
+          const isNotLastSlide = slideIndex < Object.keys(this.config.slides).length - 1;
+          if (isNotLastSlide) {
             const pCtrlLabelWrapper = document.createElement("label");
             pCtrlLabelWrapper.setAttribute("for", `slider_${slideIndex}`);
             pCtrlLabelWrapper.id = `sliderPrevBtn_${slideIndex}`;
