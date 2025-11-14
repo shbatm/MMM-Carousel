@@ -100,10 +100,10 @@ Module.register("MMM-Carousel", {
     } else if (kp.keyName === this.keyHandler.config.map.Pause) {
       this.toggleTimer();
     } else if (this.keyHandler.reverseMap[kp.keyName].startsWith("Slide")) {
-      const goToSlide = this.keyHandler.reverseMap[kp.keyName].match(/Slide([0-9]+)/iu);
-      Log.debug(`[MMM-Carousel] ${typeof goToSlide[1]} ${goToSlide[1]}`);
-      if (typeof parseInt(goToSlide[1], 10) === "number") {
-        this.manualTransition(parseInt(goToSlide[1], 10));
+      const slideNumberStr = this.keyHandler.reverseMap[kp.keyName].slice(5);
+      const slideNumber = parseInt(slideNumberStr, 10);
+      if (Number.isFinite(slideNumber)) {
+        this.manualTransition(slideNumber);
         this.restartTimer();
       }
     }
