@@ -236,11 +236,13 @@ Module.register("MMM-Carousel", {
     const modules = MM.getModules()
       .exceptModule(this)
       .filter((module) => {
+        // Use carouselId if available, otherwise fall back to module name
+        const searchName = module.data?.config?.carouselId || module.name;
         if (positionIndex === null) {
-          return this.config.ignoreModules.indexOf(module.name) === -1;
+          return this.config.ignoreModules.indexOf(searchName) === -1;
         }
         return (
-          this.config[positionIndex].ignoreModules.indexOf(module.name) ===
+          this.config[positionIndex].ignoreModules.indexOf(searchName) ===
           -1 && module.data.position === positionIndex
         );
       }, this);
