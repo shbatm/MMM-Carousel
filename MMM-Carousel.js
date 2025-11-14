@@ -180,6 +180,10 @@ Module.register("MMM-Carousel", {
           previous: {
             notification: "CAROUSEL_PREVIOUS",
             prettyName: "Previous Slide"
+          },
+          playpause: {
+            notification: "CAROUSEL_PLAYPAUSE",
+            prettyName: "Play/Pause"
           }
         }
       };
@@ -208,7 +212,6 @@ Module.register("MMM-Carousel", {
       this.manualTransition(undefined, -1);
     } else if (notification === "CAROUSEL_PLAYPAUSE") {
       this.toggleTimer();
-      this.restartTimer();
     } else if (notification === "CAROUSEL_GOTO") {
       if (typeof payload === "number" || typeof payload === "string") {
         try {
