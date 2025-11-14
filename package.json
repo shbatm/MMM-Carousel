@@ -1,6 +1,6 @@
 {
   "name": "mmm-carousel",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "Displays a single MagicMirror² module at a time or in groups of slides, rotating through the list of configured modules in a carousel-like fashion.",
   "keywords": [
     "magic",

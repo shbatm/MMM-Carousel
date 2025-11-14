@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0](https://github.com/shbatm/MMM-Carousel/compare/v0.6.2...v0.7.0) ― 2025-11-14 ― Feature Release
+
+### Added Features
+
+- feat: support carouselId in ignoreModules filtering
+  - Use carouselId in module filtering for ignoreModules config
+  - Falls back to module.name
+  - Works in all carousel modes (global, positional, slides)
+  - Add documentation and example with multiple module instances
+  - Resolves #39
+- feat: add CAROUSEL_TOGGLE_AUTO to switch between manual and automatic navigation
+  - Introduce isManualMode flag to control automatic rotation state
+  - Add CAROUSEL_TOGGLE_AUTO notification and MMM-Remote-Control API action
+  - Add guard clauses in restartTimer() and toggleTimer() to respect manual mode
+  - Prevent automatic scheduling in moduleTransition when in manual mode
+  - Update README with new notification documentation
+  - Resolves #24
+
+### Fixed
+
+- fix: CAROUSEL_PLAYPAUSE now properly pauses and add to API
+- fix: ensure timer restarts on CAROUSEL_PREVIOUS notification
+
+### Chores
+
+- chore: update devDependencies
+- refactor: extensive code modernization for better maintainability
+  - Replace Font Awesome with pure CSS navigation arrows
+  - Split large methods into focused helper functions
+  - Add comprehensive JSDoc documentation with type annotations
+  - Replace short variable names with descriptive identifiers
+  - Eliminate `undefined` usage in favor of explicit `null` initialization
+  - Replace regex pattern with modern string methods for clarity
+  - Cache repeated calculations for better performance
+  - Initialize all variables on declaration to prevent errors
+
 ## [0.6.2](https://github.com/shbatm/MMM-Carousel/compare/v0.6.1...v0.6.2) ― 2025-09-01 ― Maintenance Release
 
 - chore: update actions/checkout to v5 in automated tests workflow
@@ -189,7 +225,7 @@ Changes:
         },
 ```
 
-## [0.2.0] ― 2027-05-22 ― Added manual-only slides and per-slide positions & classes
+## [0.2.0] ― 2017-05-22 ― Added manual-only slides and per-slide positions & classes
 
 Changes:
 
