@@ -32,6 +32,28 @@ body {
   zoom: 2;
 }
 
+.mmm-carousel-container {
+  /* Arrow styling variables */
+  --arrow-size: 14px;
+  --arrow-thickness: 4px;
+  --arrow-color: #000;
+  --arrow-offset: 13px;
+
+  /* Control opacity variables */
+  --control-opacity-default: 0.2;
+  --control-opacity-hover: 0.5;
+  --control-opacity-active: 0.8;
+
+  /* Layout */
+  overflow: visible !important;
+  position: absolute;
+  height: 60px;
+  bottom: -60px;
+  width: 100%;
+  left: 0;
+  z-index: 50;
+}
+
 /* Next and Previous arrow */
 .control {
   position: absolute;
@@ -55,6 +77,67 @@ body {
   color: #fff;
   cursor: pointer !important;
   opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/*
+ * Carousel navigation arrows
+ */
+.carousel-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: rgb(255 255 255 / 100%);
+  border-radius: 50%;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+  position: relative;
+}
+
+.carousel-arrow::before {
+  content: "";
+  display: block;
+  width: var(--arrow-size);
+  height: var(--arrow-size);
+  border-top: var(--arrow-thickness) solid var(--arrow-color);
+  border-right: var(--arrow-thickness) solid var(--arrow-color);
+  border-radius: 5px;
+  position: absolute;
+}
+
+.carousel-arrow-right::before {
+  transform: rotate(45deg);
+  left: var(--arrow-offset);
+}
+
+.carousel-arrow-left::before {
+  transform: rotate(-135deg);
+  right: var(--arrow-offset);
+}
+
+.control:hover .carousel-arrow {
+  transform: scale(1.1);
+  background: rgb(255 255 255 / 80%);
+}
+
+/* Available controls - visible with default opacity */
+.mmm-carousel-available {
+  display: block !important;
+  z-index: 100 !important;
+  opacity: var(--control-opacity-default) !important;
+}
+
+/* Hover states for available controls */
+.control:hover .mmm-carousel-available {
+  opacity: var(--control-opacity-hover) !important;
+  cursor: pointer !important;
+}
+
+.control .mmm-carousel-available:hover {
+  opacity: var(--control-opacity-active) !important;
 }
 
 .next {
@@ -91,11 +174,6 @@ body {
   cursor: pointer !important;
 }
 
-.control:hover label {
-  opacity: 0.2;
-  cursor: pointer !important;
-}
-
 .mmm-carousel-current-page {
   background: rgb(255 255 255 / 100%) !important;
 }
@@ -115,20 +193,4 @@ body {
   bottom: -200px;
   left: -200px;
   visibility: hidden;
-}
-
-/* Slider Pagger arrow event */
-.mmm-carousel-available {
-  display: block !important;
-  z-index: 100 !important;
-}
-
-.mmm-carousel-container {
-  overflow: visible !important;
-  position: absolute;
-  height: 60px;
-  bottom: -60px;
-  width: 100%;
-  left: 0;
-  z-index: 50;
 }

@@ -665,8 +665,9 @@ Module.register("MMM-Carousel", {
             const nCtrlLabelWrapper = document.createElement("label");
             nCtrlLabelWrapper.setAttribute("for", `slider_${j}`);
             nCtrlLabelWrapper.id = `sliderNextBtn_${j}`;
-            nCtrlLabelWrapper.innerHTML =
-                "<i class='fa fa-arrow-circle-right'></i>";
+            const arrow = document.createElement("span");
+            arrow.className = "carousel-arrow carousel-arrow-right";
+            nCtrlLabelWrapper.appendChild(arrow);
             nextWrapper.appendChild(nCtrlLabelWrapper);
           }
 
@@ -674,8 +675,9 @@ Module.register("MMM-Carousel", {
             const pCtrlLabelWrapper = document.createElement("label");
             pCtrlLabelWrapper.setAttribute("for", `slider_${j}`);
             pCtrlLabelWrapper.id = `sliderPrevBtn_${j}`;
-            pCtrlLabelWrapper.innerHTML =
-                "<i class='fa fa-arrow-circle-left'></i>";
+            const arrow = document.createElement("span");
+            arrow.className = "carousel-arrow carousel-arrow-left";
+            pCtrlLabelWrapper.appendChild(arrow);
             previousWrapper.appendChild(pCtrlLabelWrapper);
           }
         }
