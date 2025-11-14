@@ -100,6 +100,7 @@ Module.register("MMM-Carousel", {
   start () {
     Log.info(`Starting module: ${this.name} with identifier: ${this.identifier}`);
     globalThis = this;
+    this.isManualMode = false;
   },
 
   validKeyPress (kp) {
@@ -184,6 +185,10 @@ Module.register("MMM-Carousel", {
           playpause: {
             notification: "CAROUSEL_PLAYPAUSE",
             prettyName: "Play/Pause"
+          },
+          toggleauto: {
+            notification: "CAROUSEL_TOGGLE_AUTO",
+            prettyName: "Toggle Auto-Rotation"
           }
         }
       };
@@ -213,6 +218,23 @@ Module.register("MMM-Carousel", {
       this.restartTimer();
     } else if (notification === "CAROUSEL_PLAYPAUSE") {
       this.toggleTimer();
+    } else if (notification === "CAROUSEL_TOGGLE_AUTO") {
+      this.isManualMode = !this.isManualMode;
+      if (this.isManualMode) {
+        Log.info("[MMM-Carousel] Switched to manual mode - stopping automatic rotation");
+        // Stop the timer
+        this.updatePause(true);
+        if (this.transitionTimer) {
+          clearInterval(this.transitionTimer);
+          clearTimeout(this.transitionTimer);
+          this.transitionTimer = undefined;
+        }
+      } else {
+        Log.info("[MMM-Carousel] Switched to automatic mode - starting automatic rotation");
+        this.updatePause(false);
+        // Start the timer
+        this.restartTimer();
+      }
     } else if (notification === "CAROUSEL_GOTO") {
       if (typeof payload === "number" || typeof payload === "string") {
         try {
@@ -352,8 +374,8 @@ Module.register("MMM-Carousel", {
     Log.debug(`[MMM-Carousel] Transitioning to slide ${this.currentIndex}`);
     globalThis.sendNotification("CAROUSEL_CHANGED", {slide: this.currentIndex});
 
-    // Schedule next slide transition with individual timing
-    if (this.slides !== undefined && Object.keys(this.timings).length > 0) {
+    // Schedule next slide transition with individual timing (only in automatic mode)
+    if (this.slides !== undefined && Object.keys(this.timings).length > 0 && !globalThis.isManualMode) {
       globalThis.scheduleNextTransition(this.currentIndex);
     }
 
@@ -507,6 +529,11 @@ Module.register("MMM-Carousel", {
   },
 
   restartTimer () {
+    // Don't restart timer in manual mode
+    if (this.isManualMode) {
+      return;
+    }
+
     if (this.config.mode === "slides" && Object.keys(this.config.timings).length > 0) {
       // Use individual slide timings
       this.updatePause(false);
@@ -530,29 +557,22 @@ Module.register("MMM-Carousel", {
   },
 
   toggleTimer () {
-    if (this.config.transitionInterval > 0) {
-      if (this.transitionTimer) {
-        this.updatePause(true);
-        clearInterval(this.transitionTimer);
-        this.transitionTimer = undefined;
-      } else {
-        this.updatePause(false);
-        this.transitionTimer = setInterval(
-          this.manualTransition,
-          this.config.transitionInterval
-        );
-      }
-    } else if (this.config.transitionTimeout > 0) {
-      if (this.transitionTimer) {
-        this.updatePause(true);
-        clearTimeout(this.transitionTimer);
-        this.transitionTimer = undefined;
-      } else {
-        this.updatePause(false);
-        this.transitionTimer = setTimeout(() => {
-          this.transitionTimeoutCallback();
-        }, this.config.transitionTimeout);
-      }
+    // Don't toggle timer while manual mode is active
+    if (this.isManualMode) {
+      return;
+    }
+
+    // Check if a timer exists and toggle it
+    if (this.transitionTimer) {
+      // Timer is running - pause it
+      this.updatePause(true);
+      clearInterval(this.transitionTimer);
+      clearTimeout(this.transitionTimer);
+      this.transitionTimer = undefined;
+    } else {
+      // Timer is paused - restart it
+      this.updatePause(false);
+      this.restartTimer();
     }
   },
 
