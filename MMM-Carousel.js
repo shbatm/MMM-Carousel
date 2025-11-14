@@ -122,7 +122,72 @@ Module.register("MMM-Carousel", {
     }
   },
 
-  notificationReceived (notification, payload, sender) {
+  /**
+   * Set up MMM-KeyBindings integration if available
+   */
+  setupKeyHandler () {
+    if (
+      this.config.keyBindings.enabled &&
+      MM.getModules().filter((kb) => kb.name === "MMM-KeyBindings").length > 0
+    ) {
+      this.keyBindings = {
+        ...this.keyBindings,
+        ...this.config.keyBindings
+      };
+      KeyHandler.register(this.name, {
+        validKeyPress: (kp) => {
+          this.validKeyPress(kp);
+        }
+      });
+      this.keyHandler = KeyHandler.create(this.name, this.keyBindings);
+    }
+  },
+
+  /**
+   * Register carousel API actions for external control
+   */
+  registerApiActions () {
+    const api = {
+      module: "MMM-Carousel",
+      path: "carousel",
+      actions: {
+        next: {
+          notification: "CAROUSEL_NEXT",
+          prettyName: "Next Slide"
+        },
+        previous: {
+          notification: "CAROUSEL_PREVIOUS",
+          prettyName: "Previous Slide"
+        },
+        playpause: {
+          notification: "CAROUSEL_PLAYPAUSE",
+          prettyName: "Play/Pause"
+        },
+        toggleauto: {
+          notification: "CAROUSEL_TOGGLE_AUTO",
+          prettyName: "Toggle Auto-Rotation"
+        }
+      }
+    };
+
+    if (this.config.mode === "slides") {
+      Object.keys(this.config.slides).forEach((s) => {
+        api.actions[s.replace(/\s/gu, "").toLowerCase()] = {
+          notification: "CAROUSEL_GOTO",
+          payload: {slide: s},
+          prettyName: `Go To Slide ${s}`
+        };
+      });
+    }
+
+    this.sendNotification("REGISTER_API", api);
+  },
+
+  /**
+   * Initialize the module after DOM creation
+   * Sets up key bindings, transition timers, and registers API actions
+   */
+  initializeModule () {
     const positions = [
       "top_bar",
       "bottom_bar",
@@ -138,70 +203,27 @@ Module.register("MMM-Carousel", {
       "fullscreen_above",
       "fullscreen_below"
     ];
+
+    this.setupKeyHandler();
+
+    // Set up transition timers for all modules
+    if (this.config.mode === "global" || this.config.mode === "slides") {
+      this.setUpTransitionTimers(null);
+    } else {
+      for (const position of positions) {
+        if (this.config[position].enabled) {
+          this.setUpTransitionTimers(position);
+        }
+      }
+    }
+
+    this.registerApiActions();
+  },
+
+  notificationReceived (notification, payload, sender) {
     if (notification === "MODULE_DOM_CREATED") {
-      // Register Key Handler
-      if (
-        this.config.keyBindings.enabled &&
-        MM.getModules().filter((kb) => kb.name === "MMM-KeyBindings").length > 0
-      ) {
-        this.keyBindings = {
-          ...this.keyBindings,
-          ...this.config.keyBindings
-        };
-        KeyHandler.register(this.name, {
-          validKeyPress: (kp) => {
-            this.validKeyPress(kp); // Your Key Press Function
-          }
-        });
-        this.keyHandler = KeyHandler.create(this.name, this.keyBindings);
-      }
-
-      /*
-       * Initially, all modules are hidden except the first and any ignored modules
-       * We start by getting a list of all of the modules in the transition cycle
-       */
-      if (this.config.mode === "global" || this.config.mode === "slides") {
-        this.setUpTransitionTimers(null);
-      } else {
-        for (const position of positions) {
-          if (this.config[position].enabled) {
-            this.setUpTransitionTimers(position);
-          }
-        }
-      }
-
-      const api = {
-        module: "MMM-Carousel",
-        path: "carousel",
-        actions: {
-          next: {
-            notification: "CAROUSEL_NEXT",
-            prettyName: "Next Slide"
-          },
-          previous: {
-            notification: "CAROUSEL_PREVIOUS",
-            prettyName: "Previous Slide"
-          },
-          playpause: {
-            notification: "CAROUSEL_PLAYPAUSE",
-            prettyName: "Play/Pause"
-          },
-          toggleauto: {
-            notification: "CAROUSEL_TOGGLE_AUTO",
-            prettyName: "Toggle Auto-Rotation"
-          }
-        }
-      };
-      if (this.config.mode === "slides") {
-        Object.keys(this.config.slides).forEach((s) => {
-          api.actions[s.replace(/\s/gu, "").toLowerCase()] = {
-            notification: "CAROUSEL_GOTO",
-            payload: {slide: s},
-            prettyName: `Go To Slide ${s}`
-          };
-        });
-      }
-      this.sendNotification("REGISTER_API", api);
+      this.initializeModule();
+      return;
     }
 
     if (this.keyHandler && this.keyHandler.validate(notification, payload)) {
@@ -529,6 +551,43 @@ Module.register("MMM-Carousel", {
   },
 
   /**
+   * Show/hide modules according to current slide configuration
+   * @param {object} modulesContext - The modules array context
+   * @param {Function} selectWrapper - Function to select position wrapper DOM element
+   */
+  showModulesForSlide (modulesContext, selectWrapper) {
+    for (let i = 0; i < modulesContext.length; i += 1) {
+      Log.debug(`[MMM-Carousel] Processing ${modulesContext[i].name}`);
+
+      // Simple mode: show only current index
+      if (modulesContext.slides === undefined) {
+        if (i === modulesContext.currentIndex) {
+          modulesContext[i].show(modulesContext.slideFadeInSpeed, false, {lockString: "mmmc"});
+        } else {
+          modulesContext[i].hide(0, false, {lockString: "mmmc"});
+        }
+      } else {
+        // Slides mode: check each module against slide config
+        const mods = modulesContext.slides[Object.keys(modulesContext.slides)[modulesContext.currentIndex]];
+        let show = false;
+
+        for (let s = 0; s < mods.length; s += 1) {
+          if (carouselInstance.shouldShowModuleInSlide(modulesContext[i], mods[s])) {
+            carouselInstance.applyModuleStyles(modulesContext[i], mods[s], selectWrapper);
+            modulesContext[i].show(modulesContext.slideFadeInSpeed, false, {lockString: "mmmc"});
+            show = true;
+            break;
+          }
+        }
+
+        if (!show) {
+          modulesContext[i].hide(0, false, {lockString: "mmmc"});
+        }
+      }
+    }
+  },
+
+  /**
    * Transition between carousel slides
    * This method is called with the modules array as context (via bind/call)
    * @param {number} [goToIndex=-1] - Target slide index (-1 for relative navigation)
@@ -584,35 +643,7 @@ Module.register("MMM-Carousel", {
 
     // Then show appropriate modules after fade out
     setTimeout(() => {
-      for (let i = 0; i < this.length; i += 1) {
-        Log.debug(`[MMM-Carousel] Processing ${this[i].name}`);
-
-        // Simple mode: show only current index
-        if (this.slides === undefined) {
-          if (i === this.currentIndex) {
-            this[i].show(this.slideFadeInSpeed, false, {lockString: "mmmc"});
-          } else {
-            this[i].hide(0, false, {lockString: "mmmc"});
-          }
-        } else {
-          // Slides mode: check each module against slide config
-          const mods = this.slides[Object.keys(this.slides)[this.currentIndex]];
-          let show = false;
-
-          for (let s = 0; s < mods.length; s += 1) {
-            if (carouselInstance.shouldShowModuleInSlide(this[i], mods[s])) {
-              carouselInstance.applyModuleStyles(this[i], mods[s], selectWrapper);
-              this[i].show(this.slideFadeInSpeed, false, {lockString: "mmmc"});
-              show = true;
-              break;
-            }
-          }
-
-          if (!show) {
-            this[i].hide(0, false, {lockString: "mmmc"});
-          }
-        }
-      }
+      carouselInstance.showModulesForSlide(this, selectWrapper);
     }, this.slideFadeOutSpeed);
 
     // Update indicators
