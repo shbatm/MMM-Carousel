@@ -29,7 +29,7 @@ There are three modes available:
 Run these commands at the root of your MagicMirror² to install.
 
 ```shell
-cd modules
+cd ~/MagicMirror/modules
 git clone https://github.com/shbatm/MMM-Carousel
 ```
 
