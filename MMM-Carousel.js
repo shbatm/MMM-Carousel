@@ -86,6 +86,7 @@ Module.register("MMM-Carousel", {
   start () {
     Log.info(`Starting module: ${this.name} with identifier: ${this.identifier}`);
     this.isManualMode = false;
+    this.positionTimers = {};
   },
 
   validKeyPress (kp) {
@@ -517,12 +518,18 @@ Module.register("MMM-Carousel", {
         }, ctx.slideFadeOutSpeed);
       };
 
+      // Clear any previously running timer for this position to avoid leaking intervals
+      if (this.positionTimers[positionIndex]) {
+        clearInterval(this.positionTimers[positionIndex]);
+        this.positionTimers[positionIndex] = null;
+      }
+
       // Initial transition
       transitionFn();
 
       // Start interval timer (captured in closure)
       if (ctx.transitionInterval > 0) {
-        setInterval(transitionFn, ctx.transitionInterval);
+        this.positionTimers[positionIndex] = setInterval(transitionFn, ctx.transitionInterval);
       }
     }
   },
