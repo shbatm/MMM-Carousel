@@ -513,9 +513,9 @@ Module.register("MMM-Carousel", {
         for (const mod of ctx.modules) {
           mod.hide(ctx.slideFadeOutSpeed, false, {lockString: "mmmc"});
         }
-        setTimeout(() => {
+        this.runAfterDelay(ctx.slideFadeOutSpeed, () => {
           ctx.modules[ctx.currentIndex].show(ctx.slideFadeInSpeed, false, {lockString: "mmmc"});
-        }, ctx.slideFadeOutSpeed);
+        });
       };
 
       // Clear any previously running timer for this position to avoid leaking intervals
@@ -845,17 +845,30 @@ Module.register("MMM-Carousel", {
     }
 
     // Then show appropriate modules after fade out
-    setTimeout(() => {
+    this.runAfterDelay(ctx.slideFadeOutSpeed, () => {
       this.showModulesForSlide(ctx);
 
       // Schedule next transition after modules are shown (only in automatic mode)
       if (!this.isManualMode) {
         this.scheduleNextTransition(ctx.currentIndex);
       }
-    }, ctx.slideFadeOutSpeed);
+    });
 
     // Update indicators
     this.updateSlideIndicators(ctx, resetCurrentIndex);
+  },
+
+  /**
+   * Run a callback after the given delay, or immediately if the delay is 0
+   * @param {number} delay - Delay in milliseconds
+   * @param {() => void} callback - Callback to execute
+   */
+  runAfterDelay (delay, callback) {
+    if (delay > 0) {
+      setTimeout(callback, delay);
+    } else {
+      callback();
+    }
   },
 
   updatePause (paused) {
