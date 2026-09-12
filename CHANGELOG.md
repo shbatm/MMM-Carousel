@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.4](https://github.com/shbatm/MMM-Carousel/compare/v0.7.3...v0.7.4) (2026-09-12)
+
+### Bug Fixes
+
+* initialize positionTimers defensively in setUpTransitionTimers ([622c36f](https://github.com/shbatm/MMM-Carousel/commit/622c36fa1d05033543c7f0bd093b9f9d61ad32ac))
+* prevent leaking positional-mode transition intervals ([82f037e](https://github.com/shbatm/MMM-Carousel/commit/82f037ead3a96c784d47ca236fa1333c327e1188))
+
+### Documentation
+
+* align README section naming with other modules ([f3f75ff](https://github.com/shbatm/MMM-Carousel/commit/f3f75ff03a51c67960f604ebc0458bed9318d018))
+
+### Code Refactoring
+
+* replace fade-out callback with async/await delay helper ([92a29c3](https://github.com/shbatm/MMM-Carousel/commit/92a29c3a7e3c6cb254dc347da6e77d05ec765c13))
+
+### Performance Improvements
+
+* skip setTimeout tick when fade-out speed is zero ([b862eee](https://github.com/shbatm/MMM-Carousel/commit/b862eeeb9e98a63ad19799b388ab7947e0cb4004))
+
+### Chores
+
+* simplify prepare script to use simple-git-hooks directly ([87afe44](https://github.com/shbatm/MMM-Carousel/commit/87afe44378be9465e3c55c421b46cfa675730cb9))
+* update devDependencies ([14b3790](https://github.com/shbatm/MMM-Carousel/commit/14b3790d80e04c8c973a807d2853bd80c25f6e6d))
+* update GitHub Actions ([8465aaa](https://github.com/shbatm/MMM-Carousel/commit/8465aaa2f20e577587244d5f167e10ca79b85b50))
+* update jsdoc plugin import ([ee2fa98](https://github.com/shbatm/MMM-Carousel/commit/ee2fa98cc50efe7810e6d316068bbe48e7f337c3))
 ## [0.7.3](https://github.com/shbatm/MMM-Carousel/compare/v0.7.2...v0.7.3) (2026-02-16)
 
 
