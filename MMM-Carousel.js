@@ -482,6 +482,8 @@ Module.register("MMM-Carousel", {
    * @param {string|null} positionIndex - Position name (e.g., 'top_bar') for positional mode, or null for global/slides mode
    */
   setUpTransitionTimers (positionIndex) {
+    this.positionTimers ??= {};
+
     const modules = this.getFilteredModules(positionIndex);
     const ctx = this.buildModulesContext(modules);
     ctx.positionIndex = positionIndex;
