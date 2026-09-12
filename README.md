@@ -41,7 +41,7 @@ cd ~/MagicMirror/modules/MMM-Carousel
 git pull
 ```
 
-## Using the module
+## Configuration
 
 To use this module, add the following configuration block to the modules array in the `config/config.js` file:
 
