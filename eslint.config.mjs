@@ -3,7 +3,7 @@ import {defineConfig} from "eslint/config";
 import globals from "globals";
 import {flatConfigs as importX} from "eslint-plugin-import-x";
 import js from "@eslint/js";
-import jsdocPlugin from "eslint-plugin-jsdoc";
+import {configs as jsdoc} from "eslint-plugin-jsdoc";
 import markdown from "@eslint/markdown";
 import stylistic from "@stylistic/eslint-plugin";
 
@@ -19,7 +19,7 @@ export default defineConfig([
         ...globals.node
       }
     },
-    "extends": [importX.recommended, js.configs.all, jsdocPlugin.configs["flat/recommended"], stylistic.configs.all],
+    "extends": [importX.recommended, js.configs.all, jsdoc["flat/recommended"], stylistic.configs.all],
     "rules": {
       "@stylistic/dot-location": ["error", "property"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],

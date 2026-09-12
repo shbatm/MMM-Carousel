@@ -86,6 +86,7 @@ Module.register("MMM-Carousel", {
   start () {
     Log.info(`Starting module: ${this.name} with identifier: ${this.identifier}`);
     this.isManualMode = false;
+    this.positionTimers = {};
   },
 
   validKeyPress (kp) {
@@ -481,6 +482,8 @@ Module.register("MMM-Carousel", {
    * @param {string|null} positionIndex - Position name (e.g., 'top_bar') for positional mode, or null for global/slides mode
    */
   setUpTransitionTimers (positionIndex) {
+    this.positionTimers ??= {};
+
     const modules = this.getFilteredModules(positionIndex);
     const ctx = this.buildModulesContext(modules);
     ctx.positionIndex = positionIndex;
@@ -502,7 +505,7 @@ Module.register("MMM-Carousel", {
        * Positional mode: use closure to capture ctx for this position
        * Each position gets its own timer with its own context
        */
-      const transitionFn = () => {
+      const transitionFn = async () => {
         const moduleCount = ctx.modules.length;
         ctx.currentIndex = (ctx.currentIndex + 1) % moduleCount;
 
@@ -512,17 +515,24 @@ Module.register("MMM-Carousel", {
         for (const mod of ctx.modules) {
           mod.hide(ctx.slideFadeOutSpeed, false, {lockString: "mmmc"});
         }
-        setTimeout(() => {
-          ctx.modules[ctx.currentIndex].show(ctx.slideFadeInSpeed, false, {lockString: "mmmc"});
-        }, ctx.slideFadeOutSpeed);
+        if (ctx.slideFadeOutSpeed > 0) {
+          await this.delay(ctx.slideFadeOutSpeed);
+        }
+        ctx.modules[ctx.currentIndex].show(ctx.slideFadeInSpeed, false, {lockString: "mmmc"});
       };
+
+      // Clear any previously running timer for this position to avoid leaking intervals
+      if (this.positionTimers[positionIndex]) {
+        clearInterval(this.positionTimers[positionIndex]);
+        this.positionTimers[positionIndex] = null;
+      }
 
       // Initial transition
       transitionFn();
 
       // Start interval timer (captured in closure)
       if (ctx.transitionInterval > 0) {
-        setInterval(transitionFn, ctx.transitionInterval);
+        this.positionTimers[positionIndex] = setInterval(transitionFn, ctx.transitionInterval);
       }
     }
   },
@@ -802,7 +812,7 @@ Module.register("MMM-Carousel", {
    * @param {number} [goDirection] - Direction offset for relative navigation (defaults to 0, e.g., 1 for next, -1 for previous)
    * @param {string} [goToSlide] - Target slide name (for named slide navigation)
    */
-  moduleTransition (goToIndex, goDirection, goToSlide) {
+  async moduleTransition (goToIndex, goDirection, goToSlide) {
     const ctx = this.modulesContext;
 
     // Set defaults for optional parameters
@@ -837,18 +847,30 @@ Module.register("MMM-Carousel", {
       module.hide(ctx.slideFadeOutSpeed, false, {lockString: "mmmc"});
     }
 
-    // Then show appropriate modules after fade out
-    setTimeout(() => {
-      this.showModulesForSlide(ctx);
-
-      // Schedule next transition after modules are shown (only in automatic mode)
-      if (!this.isManualMode) {
-        this.scheduleNextTransition(ctx.currentIndex);
-      }
-    }, ctx.slideFadeOutSpeed);
-
     // Update indicators
     this.updateSlideIndicators(ctx, resetCurrentIndex);
+
+    // Then show appropriate modules after fade out
+    if (ctx.slideFadeOutSpeed > 0) {
+      await this.delay(ctx.slideFadeOutSpeed);
+    }
+    this.showModulesForSlide(ctx);
+
+    // Schedule next transition after modules are shown (only in automatic mode)
+    if (!this.isManualMode) {
+      this.scheduleNextTransition(ctx.currentIndex);
+    }
+  },
+
+  /**
+   * Resolve after the given number of milliseconds
+   * @param {number} ms - Delay in milliseconds
+   * @returns {Promise<void>} Promise that resolves after the delay
+   */
+  delay (ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   },
 
   updatePause (paused) {
