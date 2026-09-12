@@ -37,7 +37,7 @@
     "demo:positional": "cd ../../ && MM_CONFIG_FILE=modules/MMM-Carousel/demo.config.positional.js node --run start:dev",
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint --fix && prettier --write .",
-    "prepare": "node -e \"try{require('simple-git-hooks').run()}catch(e){}\"",
+    "prepare": "simple-git-hooks || true",
     "release": "commit-and-tag-version",
     "test": "node --run test:unit && node --run lint && node --run test:spelling",
     "test:spelling": "cspell . .github",
