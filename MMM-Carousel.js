@@ -503,7 +503,7 @@ Module.register("MMM-Carousel", {
        * Positional mode: use closure to capture ctx for this position
        * Each position gets its own timer with its own context
        */
-      const transitionFn = () => {
+      const transitionFn = async () => {
         const moduleCount = ctx.modules.length;
         ctx.currentIndex = (ctx.currentIndex + 1) % moduleCount;
 
@@ -513,9 +513,10 @@ Module.register("MMM-Carousel", {
         for (const mod of ctx.modules) {
           mod.hide(ctx.slideFadeOutSpeed, false, {lockString: "mmmc"});
         }
-        this.runAfterDelay(ctx.slideFadeOutSpeed, () => {
-          ctx.modules[ctx.currentIndex].show(ctx.slideFadeInSpeed, false, {lockString: "mmmc"});
-        });
+        if (ctx.slideFadeOutSpeed > 0) {
+          await this.delay(ctx.slideFadeOutSpeed);
+        }
+        ctx.modules[ctx.currentIndex].show(ctx.slideFadeInSpeed, false, {lockString: "mmmc"});
       };
 
       // Clear any previously running timer for this position to avoid leaking intervals
@@ -809,7 +810,7 @@ Module.register("MMM-Carousel", {
    * @param {number} [goDirection] - Direction offset for relative navigation (defaults to 0, e.g., 1 for next, -1 for previous)
    * @param {string} [goToSlide] - Target slide name (for named slide navigation)
    */
-  moduleTransition (goToIndex, goDirection, goToSlide) {
+  async moduleTransition (goToIndex, goDirection, goToSlide) {
     const ctx = this.modulesContext;
 
     // Set defaults for optional parameters
@@ -844,31 +845,30 @@ Module.register("MMM-Carousel", {
       module.hide(ctx.slideFadeOutSpeed, false, {lockString: "mmmc"});
     }
 
-    // Then show appropriate modules after fade out
-    this.runAfterDelay(ctx.slideFadeOutSpeed, () => {
-      this.showModulesForSlide(ctx);
-
-      // Schedule next transition after modules are shown (only in automatic mode)
-      if (!this.isManualMode) {
-        this.scheduleNextTransition(ctx.currentIndex);
-      }
-    });
-
     // Update indicators
     this.updateSlideIndicators(ctx, resetCurrentIndex);
+
+    // Then show appropriate modules after fade out
+    if (ctx.slideFadeOutSpeed > 0) {
+      await this.delay(ctx.slideFadeOutSpeed);
+    }
+    this.showModulesForSlide(ctx);
+
+    // Schedule next transition after modules are shown (only in automatic mode)
+    if (!this.isManualMode) {
+      this.scheduleNextTransition(ctx.currentIndex);
+    }
   },
 
   /**
-   * Run a callback after the given delay, or immediately if the delay is 0
-   * @param {number} delay - Delay in milliseconds
-   * @param {() => void} callback - Callback to execute
+   * Resolve after the given number of milliseconds
+   * @param {number} ms - Delay in milliseconds
+   * @returns {Promise<void>} Promise that resolves after the delay
    */
-  runAfterDelay (delay, callback) {
-    if (delay > 0) {
-      setTimeout(callback, delay);
-    } else {
-      callback();
-    }
+  delay (ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   },
 
   updatePause (paused) {
