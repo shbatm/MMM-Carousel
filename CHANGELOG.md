@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.5](https://github.com/shbatm/MMM-Carousel/compare/v0.7.4...v0.7.5) (2026-09-23)
+
+### Bug Fixes
+
+* **carousel:** use KeyBindings callback ([3f783d0](https://github.com/shbatm/MMM-Carousel/commit/3f783d09ac15f4562976ad2480b1768b72135700))
+
+### Chores
+
+* update devDependencies ([7aa9711](https://github.com/shbatm/MMM-Carousel/commit/7aa9711f03cbc036cd0d334229c6aede0ad1a79f))
+
 ## [0.7.4](https://github.com/shbatm/MMM-Carousel/compare/v0.7.3...v0.7.4) (2026-09-12)
 
 ### Bug Fixes

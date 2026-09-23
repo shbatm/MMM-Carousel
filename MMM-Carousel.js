@@ -131,12 +131,10 @@ Module.register("MMM-Carousel", {
         ...this.keyBindings,
         ...this.config.keyBindings
       };
-      KeyHandler.register(this.name, {
-        validKeyPress: (kp) => {
-          this.validKeyPress(kp);
-        }
+      KeyHandler.register(this.name, KeyHandler);
+      this.keyHandler = KeyHandler.create(this.name, this.keyBindings, {
+        onKeyPress: (kp) => this.validKeyPress(kp)
       });
-      this.keyHandler = KeyHandler.create(this.name, this.keyBindings);
     }
   },
 
