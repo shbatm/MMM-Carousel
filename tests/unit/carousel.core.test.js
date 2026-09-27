@@ -47,13 +47,14 @@ global.KeyHandler = {};
 const modulePath = join(__dirname, "../../MMM-Carousel.js");
 const moduleCode = readFileSync(modulePath, "utf8");
 const script = new vm.Script(moduleCode, {filename: "MMM-Carousel.js"});
+const windowMock = {};
 const context = vm.createContext({
   Module: global.Module,
   Log: global.Log,
   MM: global.MM,
   KeyHandler: global.KeyHandler,
   document: {},
-  window: {},
+  window: windowMock,
   console: global.console,
   setTimeout: global.setTimeout,
   clearTimeout: global.clearTimeout,
@@ -517,6 +518,116 @@ describe("MMM-Carousel Core Functions", () => {
     it("should reject non-integer indices", () => {
       instance.handleCarouselGoto("abc");
       assert.equal(instance.manualTransition.mock.calls.length, 0);
+    });
+  });
+
+  describe("parseUrlHash", () => {
+    beforeEach(() => {
+      instance.modulesContext = {slides: {Home: [],
+        "News Feed": []}};
+    });
+
+    it("should return null for an empty hash", () => {
+      assert.equal(instance.parseUrlHash(""), null);
+      assert.equal(instance.parseUrlHash("#"), null);
+      assert.equal(instance.parseUrlHash(null), null);
+    });
+
+    it("should return the slide number for a numeric hash", () => {
+      assert.equal(instance.parseUrlHash("#3"), 3);
+    });
+
+    it("should return a slide object for a known slide name", () => {
+      assert.deepEqual({...instance.parseUrlHash("#Home")}, {slide: "Home"});
+    });
+
+    it("should decode encoded slide names", () => {
+      assert.deepEqual({...instance.parseUrlHash("#News%20Feed")}, {slide: "News Feed"});
+    });
+
+    it("should return null for unknown slide names", () => {
+      assert.equal(instance.parseUrlHash("#nope"), null);
+      assert.ok(Log.warn.mock.calls.length > 0);
+    });
+
+    it("should return null for malformed encodings", () => {
+      assert.equal(instance.parseUrlHash("#%E0%A4%A"), null);
+    });
+  });
+
+  describe("setupUrlHash", () => {
+    beforeEach(() => {
+      windowMock.location = {hash: "#2"};
+      windowMock.addEventListener = mock.fn();
+      instance.handleCarouselGoto = mock.fn();
+      instance.hashChangeHandler = null;
+    });
+
+    afterEach(() => {
+      delete windowMock.location;
+      delete windowMock.addEventListener;
+    });
+
+    it("should do nothing when urlHash is disabled", () => {
+      instance.setupUrlHash();
+      assert.equal(windowMock.addEventListener.mock.calls.length, 0);
+      assert.equal(instance.handleCarouselGoto.mock.calls.length, 0);
+    });
+
+    it("should not register in positional mode", () => {
+      instance.config.urlHash = true;
+      instance.config.mode = "positional";
+      instance.setupUrlHash();
+      assert.equal(windowMock.addEventListener.mock.calls.length, 0);
+      assert.ok(Log.warn.mock.calls.length > 0);
+    });
+
+    it("should jump to the start hash and listen for changes", () => {
+      instance.config.urlHash = true;
+      instance.setupUrlHash();
+      assert.equal(windowMock.addEventListener.mock.calls[0].arguments[0], "hashchange");
+      assert.equal(instance.handleCarouselGoto.mock.calls[0].arguments[0], 2);
+
+      windowMock.location.hash = "#4";
+      windowMock.addEventListener.mock.calls[0].arguments[1]();
+      assert.equal(instance.handleCarouselGoto.mock.calls[1].arguments[0], 4);
+    });
+
+    it("should register the listener only once", () => {
+      instance.config.urlHash = true;
+      instance.setupUrlHash();
+      instance.setupUrlHash();
+      assert.equal(windowMock.addEventListener.mock.calls.length, 1);
+    });
+  });
+
+  describe("updateUrlHash", () => {
+    beforeEach(() => {
+      windowMock.location = {hash: "#1"};
+      windowMock.history = {replaceState: mock.fn()};
+      instance.hashChangeHandler = null;
+    });
+
+    afterEach(() => {
+      delete windowMock.location;
+      delete windowMock.history;
+    });
+
+    it("should not touch the URL before setupUrlHash ran", () => {
+      instance.updateUrlHash(2);
+      assert.equal(windowMock.history.replaceState.mock.calls.length, 0);
+    });
+
+    it("should write the 1-indexed slide number", () => {
+      instance.hashChangeHandler = mock.fn();
+      instance.updateUrlHash(2);
+      assert.equal(windowMock.history.replaceState.mock.calls[0].arguments[2], "#3");
+    });
+
+    it("should skip writing when the hash is already current", () => {
+      instance.hashChangeHandler = mock.fn();
+      instance.updateUrlHash(0);
+      assert.equal(windowMock.history.replaceState.mock.calls.length, 0);
     });
   });
 
