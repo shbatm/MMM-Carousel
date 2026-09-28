@@ -71,8 +71,8 @@ Module.register("MMM-Carousel", {
     },
     transitionTimeout: 0,
     homeSlide: 0,
-    // Sync the current slide with the URL hash (e.g. #2 or #SlideName)
-    urlHash: false
+    // Sync the current slide with the carousel query parameter (e.g. ?carousel=2 or ?carousel=SlideName)
+    urlParam: false
   },
 
   keyBindings: {
@@ -250,87 +250,81 @@ Module.register("MMM-Carousel", {
   },
 
   /**
-   * Strip the leading "#" from a URL hash and decode it
-   * @param {string} hash - URL hash, with or without leading "#"
-   * @returns {string} Decoded hash value, empty string if missing or malformed
+   * Read the `carousel` query parameter from the current URL
+   * @returns {string} Parameter value, empty string if absent
    */
-  decodeUrlHash (hash) {
-    try {
-      return decodeURIComponent(String(hash ?? "").replace(/^#/u, "")).trim();
-    } catch {
-      return "";
-    }
+  readUrlParam () {
+    return new URLSearchParams(window.location.search).get("carousel") ?? "";
   },
 
   /**
-   * Parse a URL hash into a CAROUSEL_GOTO payload
-   * @param {string} hash - URL hash, with or without leading "#"
+   * Parse a carousel query parameter value into a CAROUSEL_GOTO payload
+   * @param {string} value - The parameter value (already decoded by URLSearchParams)
    * @returns {number|object|null} 1-indexed slide number, object with slide name, or null if not usable
    */
-  parseUrlHash (hash) {
-    const value = this.decodeUrlHash(hash);
-    if (value === "") {
+  parseUrlParam (value) {
+    const val = String(value ?? "").trim();
+    if (val === "") {
       return null;
     }
-    if ((/^\d+$/u).test(value)) {
-      return Number(value);
+    if ((/^\d+$/u).test(val)) {
+      return Number(val);
     }
     const slides = this.modulesContext?.slides;
-    if (slides && Object.keys(slides).includes(value)) {
-      return {slide: value};
+    if (slides && Object.keys(slides).includes(val)) {
+      return {slide: val};
     }
-    Log.warn(`[MMM-Carousel] Unknown slide in URL hash: ${value}`);
+    Log.warn(`[MMM-Carousel] Unknown slide in URL parameter: ${val}`);
     return null;
   },
 
   /**
-   * Navigate to the slide given in the URL hash
+   * Navigate to the slide given in the URL query parameter
    */
-  goToUrlHash () {
-    const target = this.parseUrlHash(window.location.hash);
+  goToUrlParam () {
+    const target = this.parseUrlParam(this.readUrlParam());
     if (target !== null) {
       this.handleCarouselGoto(target);
     }
   },
 
   /**
-   * Set up URL hash navigation: jump to the slide in the hash on start and on hash changes
+   * Set up URL query parameter navigation: jump to the slide in ?carousel= on start
    */
-  setupUrlHash () {
-    if (!this.config.urlHash) {
+  setupUrlParam () {
+    if (!this.config.urlParam) {
       return;
     }
 
     if (this.config.mode === "positional") {
-      Log.warn("[MMM-Carousel] URL hash navigation is not supported in positional mode. Use global or slides mode instead.");
+      Log.warn("[MMM-Carousel] URL parameter navigation is not supported in positional mode. Use global or slides mode instead.");
       return;
     }
 
-    // Avoid duplicate registration
-    if (this.hashChangeHandler) {
+    // Avoid duplicate initialization
+    if (this.urlParamActive) {
       return;
     }
 
-    this.hashChangeHandler = () => {
-      this.goToUrlHash();
-    };
-    window.addEventListener("hashchange", this.hashChangeHandler);
-    this.goToUrlHash();
+    this.urlParamActive = true;
+    this.goToUrlParam();
   },
 
   /**
-   * Write the current slide number (1-indexed) to the URL hash
-   * replaceState neither fires hashchange nor adds a browser history entry.
-   * Does nothing until setupUrlHash has run, so the initial transition keeps the start hash.
+   * Write the current slide number (1-indexed) to the ?carousel= query parameter.
+   * replaceState neither fires popstate nor adds a browser history entry.
+   * Does nothing until setupUrlParam has run.
    * @param {number} slideIndex - Current slide index (0-indexed)
    */
-  updateUrlHash (slideIndex) {
-    if (!this.hashChangeHandler) {
+  updateUrlParam (slideIndex) {
+    if (!this.urlParamActive) {
       return;
     }
-    const hash = `#${slideIndex + 1}`;
-    if (window.location.hash !== hash) {
-      window.history.replaceState(null, "", hash);
+    const params = new URLSearchParams(window.location.search);
+    const newValue = String(slideIndex + 1);
+    if (params.get("carousel") !== newValue) {
+      params.set("carousel", newValue);
+      window.history.replaceState(null, "", `?${params.toString()}`);
     }
   },
 
@@ -410,7 +404,7 @@ Module.register("MMM-Carousel", {
 
     // Setup native keyboard handler after manualTransition is defined
     this.setupNativeKeyboardHandler();
-    this.setupUrlHash();
+    this.setupUrlParam();
 
     this.registerApiActions();
   },
@@ -927,7 +921,7 @@ Module.register("MMM-Carousel", {
 
     Log.debug(`[MMM-Carousel] Transitioning to slide ${ctx.currentIndex}`);
     this.sendNotification("CAROUSEL_CHANGED", {slide: ctx.currentIndex});
-    this.updateUrlHash(ctx.currentIndex);
+    this.updateUrlParam(ctx.currentIndex);
 
     // First, hide all modules
     for (const module of ctx.modules) {
