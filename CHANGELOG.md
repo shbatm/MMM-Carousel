@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.6](https://github.com/shbatm/MMM-Carousel/compare/v0.7.5...v0.7.6) (2026-09-29)
+
+### Features
+
+* sync current slide with a URL query parameter ([#190](https://github.com/shbatm/MMM-Carousel/issues/190)) ([cf4fc00](https://github.com/shbatm/MMM-Carousel/commit/cf4fc003b89b3b34ccc4bdbe417e0c9fd1fb72b3))
+
+### Bug Fixes
+
+* use debug level for goToSlide logging ([1f7f9e9](https://github.com/shbatm/MMM-Carousel/commit/1f7f9e9de28fc09d3375027150bd3c0f60e660bc))
+
+### Continuous Integration
+
+* cancel outdated workflow runs on new pushes ([837ddff](https://github.com/shbatm/MMM-Carousel/commit/837ddff327bd6be8f98e6cc52d85141fe892d72b))
+
+### Chores
+
+* update devDependencies ([ab97df2](https://github.com/shbatm/MMM-Carousel/commit/ab97df2d3db0940ede34674cb893c0d5100b8f6e))
+
 ## [0.7.5](https://github.com/shbatm/MMM-Carousel/compare/v0.7.4...v0.7.5) (2026-09-23)
 
 ### Bug Fixes

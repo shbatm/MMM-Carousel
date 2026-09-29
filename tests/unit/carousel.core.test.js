@@ -47,18 +47,21 @@ global.KeyHandler = {};
 const modulePath = join(__dirname, "../../MMM-Carousel.js");
 const moduleCode = readFileSync(modulePath, "utf8");
 const script = new vm.Script(moduleCode, {filename: "MMM-Carousel.js"});
+const windowMock = {};
 const context = vm.createContext({
   Module: global.Module,
   Log: global.Log,
   MM: global.MM,
   KeyHandler: global.KeyHandler,
   document: {},
-  window: {},
+  window: windowMock,
   console: global.console,
   setTimeout: global.setTimeout,
   clearTimeout: global.clearTimeout,
   setInterval: global.setInterval,
-  clearInterval: global.clearInterval
+  clearInterval: global.clearInterval,
+  URL: global.URL,
+  URLSearchParams: global.URLSearchParams
 });
 script.runInContext(context);
 
@@ -517,6 +520,125 @@ describe("MMM-Carousel Core Functions", () => {
     it("should reject non-integer indices", () => {
       instance.handleCarouselGoto("abc");
       assert.equal(instance.manualTransition.mock.calls.length, 0);
+    });
+  });
+
+  describe("parseUrlParam", () => {
+    beforeEach(() => {
+      instance.modulesContext = {slides: {Home: [],
+        "News Feed": []}};
+    });
+
+    it("should return null for an empty value", () => {
+      assert.equal(instance.parseUrlParam(""), null);
+      assert.equal(instance.parseUrlParam(null), null);
+    });
+
+    it("should return the slide number for a numeric value", () => {
+      assert.equal(instance.parseUrlParam("3"), 3);
+    });
+
+    it("should return a slide object for a known slide name", () => {
+      assert.deepEqual({...instance.parseUrlParam("Home")}, {slide: "Home"});
+    });
+
+    it("should handle slide names with spaces (already decoded by URLSearchParams)", () => {
+      assert.deepEqual({...instance.parseUrlParam("News Feed")}, {slide: "News Feed"});
+    });
+
+    it("should return null for unknown slide names", () => {
+      assert.equal(instance.parseUrlParam("nope"), null);
+      assert.ok(Log.warn.mock.calls.length > 0);
+    });
+  });
+
+  describe("setupUrlParam", () => {
+    beforeEach(() => {
+      windowMock.location = {
+        href: "http://localhost:8080/?carousel=2#page",
+        search: "?carousel=2"
+      };
+      windowMock.addEventListener = mock.fn();
+      instance.handleCarouselGoto = mock.fn();
+      instance.urlParamActive = false;
+    });
+
+    afterEach(() => {
+      delete windowMock.location;
+      delete windowMock.addEventListener;
+      instance.urlParamActive = false;
+    });
+
+    it("should do nothing when urlParam is disabled", () => {
+      instance.setupUrlParam();
+      assert.equal(instance.handleCarouselGoto.mock.calls.length, 0);
+    });
+
+    it("should not work in positional mode", () => {
+      instance.config.urlParam = true;
+      instance.config.mode = "positional";
+      instance.setupUrlParam();
+      assert.equal(instance.handleCarouselGoto.mock.calls.length, 0);
+      assert.ok(Log.warn.mock.calls.length > 0);
+    });
+
+    it("should jump to the slide in the start parameter", () => {
+      instance.config.urlParam = true;
+      instance.setupUrlParam();
+      assert.equal(instance.handleCarouselGoto.mock.calls[0].arguments[0], 2);
+      assert.equal(windowMock.addEventListener.mock.calls[0].arguments[0], "popstate");
+    });
+
+    it("should navigate when browser history changes the parameter", () => {
+      instance.config.urlParam = true;
+      instance.setupUrlParam();
+      windowMock.location.search = "?carousel=3";
+      windowMock.addEventListener.mock.calls[0].arguments[1]();
+      assert.equal(instance.handleCarouselGoto.mock.calls[1].arguments[0], 3);
+    });
+
+    it("should initialize only once", () => {
+      instance.config.urlParam = true;
+      instance.setupUrlParam();
+      instance.setupUrlParam();
+      assert.equal(instance.handleCarouselGoto.mock.calls.length, 1);
+    });
+  });
+
+  describe("updateUrlParam", () => {
+    beforeEach(() => {
+      windowMock.location = {
+        href: "http://localhost:8080/mirror?foo=bar&carousel=1#page",
+        search: "?foo=bar&carousel=1"
+      };
+      windowMock.history = {replaceState: mock.fn()};
+      instance.urlParamActive = false;
+    });
+
+    afterEach(() => {
+      delete windowMock.location;
+      delete windowMock.history;
+      instance.urlParamActive = false;
+    });
+
+    it("should not touch the URL before setupUrlParam ran", () => {
+      instance.updateUrlParam(2);
+      assert.equal(windowMock.history.replaceState.mock.calls.length, 0);
+    });
+
+    it("should write the 1-indexed slide number", () => {
+      instance.urlParamActive = true;
+      instance.updateUrlParam(2);
+      assert.equal(
+        windowMock.history.replaceState.mock.calls[0].arguments[2],
+        "/mirror?foo=bar&carousel=3#page"
+      );
+    });
+
+    it("should skip writing when the param is already current", () => {
+      instance.urlParamActive = true;
+      instance.updateUrlParam(0);
+      assert.equal(windowMock.history.replaceState.mock.calls.length, 0);
     });
   });
 

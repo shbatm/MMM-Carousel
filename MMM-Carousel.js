@@ -70,7 +70,9 @@ Module.register("MMM-Carousel", {
       enabled: true
     },
     transitionTimeout: 0,
-    homeSlide: 0
+    homeSlide: 0,
+    // Sync the current slide with the carousel query parameter (e.g. ?carousel=2 or ?carousel=SlideName)
+    urlParam: false
   },
 
   keyBindings: {
@@ -248,6 +250,90 @@ Module.register("MMM-Carousel", {
   },
 
   /**
+   * Read the `carousel` query parameter from the current URL
+   * @returns {string} Parameter value, empty string if absent
+   */
+  readUrlParam () {
+    return new URLSearchParams(window.location.search).get("carousel") ?? "";
+  },
+
+  /**
+   * Parse a carousel query parameter value into a CAROUSEL_GOTO payload
+   * @param {string} value - The parameter value (already decoded by URLSearchParams)
+   * @returns {number|object|null} 1-indexed slide number, object with slide name, or null if not usable
+   */
+  parseUrlParam (value) {
+    const val = String(value ?? "").trim();
+    if (val === "") {
+      return null;
+    }
+    if ((/^\d+$/u).test(val)) {
+      return Number(val);
+    }
+    const slides = this.modulesContext?.slides;
+    if (slides && Object.keys(slides).includes(val)) {
+      return {slide: val};
+    }
+    Log.warn(`[MMM-Carousel] Unknown slide in URL parameter: ${val}`);
+    return null;
+  },
+
+  /**
+   * Navigate to the slide given in the URL query parameter
+   */
+  goToUrlParam () {
+    const target = this.parseUrlParam(this.readUrlParam());
+    if (target !== null) {
+      this.handleCarouselGoto(target);
+    }
+  },
+
+  /**
+   * Set up URL query parameter navigation: jump to the slide in ?carousel= on start
+   */
+  setupUrlParam () {
+    if (!this.config.urlParam) {
+      return;
+    }
+
+    if (this.config.mode === "positional") {
+      Log.warn("[MMM-Carousel] URL parameter navigation is not supported in positional mode. Use global or slides mode instead.");
+      return;
+    }
+
+    // Avoid duplicate initialization
+    if (this.urlParamActive) {
+      return;
+    }
+
+    this.urlParamActive = true;
+    this.urlParamChangeHandler = () => {
+      this.goToUrlParam();
+    };
+    window.addEventListener("popstate", this.urlParamChangeHandler);
+    this.goToUrlParam();
+  },
+
+  /**
+   * Write the current slide number (1-indexed) to the ?carousel= query parameter,
+   * keeping the rest of the URL (path, other params, hash) untouched.
+   * replaceState neither fires popstate nor adds a browser history entry.
+   * Does nothing until setupUrlParam has run.
+   * @param {number} slideIndex - Current slide index (0-indexed)
+   */
+  updateUrlParam (slideIndex) {
+    if (!this.urlParamActive) {
+      return;
+    }
+    const url = new URL(window.location.href);
+    const newValue = String(slideIndex + 1);
+    if (url.searchParams.get("carousel") !== newValue) {
+      url.searchParams.set("carousel", newValue);
+      window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    }
+  },
+
+  /**
    * Register carousel API actions for external control
    */
   registerApiActions () {
@@ -292,6 +378,7 @@ Module.register("MMM-Carousel", {
    * Sets up key bindings, transition timers, and registers API actions
    */
   initializeModule () {
+    // Must stay in sync with the position keys in defaults above
     const positions = [
       "top_bar",
       "bottom_bar",
@@ -323,6 +410,7 @@ Module.register("MMM-Carousel", {
 
     // Setup native keyboard handler after manualTransition is defined
     this.setupNativeKeyboardHandler();
+    this.setupUrlParam();
 
     this.registerApiActions();
   },
@@ -556,11 +644,11 @@ Module.register("MMM-Carousel", {
     let nextIndex = modulesContext.currentIndex;
 
     if (goToSlide) {
-      Log.log(`[MMM-Carousel] In goToSlide, current slide index${modulesContext.currentIndex}`);
+      Log.debug(`[MMM-Carousel] In goToSlide, current slide index ${modulesContext.currentIndex}`);
       Object.keys(modulesContext.slides).find((slideName, slideIndex) => {
         if (goToSlide === slideName) {
           if (slideIndex === modulesContext.currentIndex) {
-            Log.log("[MMM-Carousel] No change, requested slide is the same.");
+            Log.debug("[MMM-Carousel] No change, requested slide is the same.");
             noChange = true;
           } else {
             nextIndex = slideIndex;
@@ -839,6 +927,7 @@ Module.register("MMM-Carousel", {
 
     Log.debug(`[MMM-Carousel] Transitioning to slide ${ctx.currentIndex}`);
     this.sendNotification("CAROUSEL_CHANGED", {slide: ctx.currentIndex});
+    this.updateUrlParam(ctx.currentIndex);
 
     // First, hide all modules
     for (const module of ctx.modules) {
