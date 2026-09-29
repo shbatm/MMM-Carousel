@@ -378,6 +378,7 @@ Module.register("MMM-Carousel", {
    * Sets up key bindings, transition timers, and registers API actions
    */
   initializeModule () {
+    // Must stay in sync with the position keys in defaults above
     const positions = [
       "top_bar",
       "bottom_bar",
@@ -643,11 +644,11 @@ Module.register("MMM-Carousel", {
     let nextIndex = modulesContext.currentIndex;
 
     if (goToSlide) {
-      Log.log(`[MMM-Carousel] In goToSlide, current slide index${modulesContext.currentIndex}`);
+      Log.debug(`[MMM-Carousel] In goToSlide, current slide index ${modulesContext.currentIndex}`);
       Object.keys(modulesContext.slides).find((slideName, slideIndex) => {
         if (goToSlide === slideName) {
           if (slideIndex === modulesContext.currentIndex) {
-            Log.log("[MMM-Carousel] No change, requested slide is the same.");
+            Log.debug("[MMM-Carousel] No change, requested slide is the same.");
             noChange = true;
           } else {
             nextIndex = slideIndex;
