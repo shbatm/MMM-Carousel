@@ -60,6 +60,7 @@ const context = vm.createContext({
   clearTimeout: global.clearTimeout,
   setInterval: global.setInterval,
   clearInterval: global.clearInterval,
+  URL: global.URL,
   URLSearchParams: global.URLSearchParams
 });
 script.runInContext(context);
@@ -553,13 +554,18 @@ describe("MMM-Carousel Core Functions", () => {
 
   describe("setupUrlParam", () => {
     beforeEach(() => {
-      windowMock.location = {search: "?carousel=2"};
+      windowMock.location = {
+        href: "http://localhost:8080/?carousel=2#page",
+        search: "?carousel=2"
+      };
+      windowMock.addEventListener = mock.fn();
       instance.handleCarouselGoto = mock.fn();
       instance.urlParamActive = false;
     });
 
     afterEach(() => {
       delete windowMock.location;
+      delete windowMock.addEventListener;
       instance.urlParamActive = false;
     });
 
@@ -580,6 +586,15 @@ describe("MMM-Carousel Core Functions", () => {
       instance.config.urlParam = true;
       instance.setupUrlParam();
       assert.equal(instance.handleCarouselGoto.mock.calls[0].arguments[0], 2);
+      assert.equal(windowMock.addEventListener.mock.calls[0].arguments[0], "popstate");
+    });
+
+    it("should navigate when browser history changes the parameter", () => {
+      instance.config.urlParam = true;
+      instance.setupUrlParam();
+      windowMock.location.search = "?carousel=3";
+      windowMock.addEventListener.mock.calls[0].arguments[1]();
+      assert.equal(instance.handleCarouselGoto.mock.calls[1].arguments[0], 3);
     });
 
     it("should initialize only once", () => {
@@ -592,7 +607,10 @@ describe("MMM-Carousel Core Functions", () => {
 
   describe("updateUrlParam", () => {
     beforeEach(() => {
-      windowMock.location = {search: "?carousel=1"};
+      windowMock.location = {
+        href: "http://localhost:8080/mirror?foo=bar&carousel=1#page",
+        search: "?foo=bar&carousel=1"
+      };
       windowMock.history = {replaceState: mock.fn()};
       instance.urlParamActive = false;
     });
@@ -611,7 +629,10 @@ describe("MMM-Carousel Core Functions", () => {
     it("should write the 1-indexed slide number", () => {
       instance.urlParamActive = true;
       instance.updateUrlParam(2);
-      assert.equal(windowMock.history.replaceState.mock.calls[0].arguments[2], "?carousel=3");
+      assert.equal(
+        windowMock.history.replaceState.mock.calls[0].arguments[2],
+        "/mirror?foo=bar&carousel=3#page"
+      );
     });
 
     it("should skip writing when the param is already current", () => {

@@ -307,11 +307,16 @@ Module.register("MMM-Carousel", {
     }
 
     this.urlParamActive = true;
+    this.urlParamChangeHandler = () => {
+      this.goToUrlParam();
+    };
+    window.addEventListener("popstate", this.urlParamChangeHandler);
     this.goToUrlParam();
   },
 
   /**
-   * Write the current slide number (1-indexed) to the ?carousel= query parameter.
+   * Write the current slide number (1-indexed) to the ?carousel= query parameter,
+   * keeping the rest of the URL (path, other params, hash) untouched.
    * replaceState neither fires popstate nor adds a browser history entry.
    * Does nothing until setupUrlParam has run.
    * @param {number} slideIndex - Current slide index (0-indexed)
@@ -320,11 +325,11 @@ Module.register("MMM-Carousel", {
     if (!this.urlParamActive) {
       return;
     }
-    const params = new URLSearchParams(window.location.search);
+    const url = new URL(window.location.href);
     const newValue = String(slideIndex + 1);
-    if (params.get("carousel") !== newValue) {
-      params.set("carousel", newValue);
-      window.history.replaceState(null, "", `?${params.toString()}`);
+    if (url.searchParams.get("carousel") !== newValue) {
+      url.searchParams.set("carousel", newValue);
+      window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
     }
   },
 
