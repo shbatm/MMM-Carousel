@@ -1,11 +1,19 @@
-body {
+body:has(.mmm-carousel-container) {
   overflow: visible;
   margin-bottom: 0;
   height: calc(100% - 60px);
 }
 
-.region.bottom {
+.region.bottom:has(.mmm-carousel-container) {
   bottom: 60px;
+}
+
+.module.MMM-Carousel {
+  margin-bottom: 0;
+}
+
+.region.bottom .module.MMM-Carousel {
+  margin-top: 0;
 }
 
 .zoom50 {
