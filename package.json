@@ -1,6 +1,6 @@
 {
   "name": "mmm-carousel",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "description": "Displays a single MagicMirror² module at a time or in groups of slides, rotating through the list of configured modules in a carousel-like fashion.",
   "keywords": [
     "magic",
@@ -40,6 +40,7 @@
     "prepare": "simple-git-hooks || true",
     "release": "commit-and-tag-version",
     "test": "node --run test:unit && node --run lint && node --run test:spelling",
+    "test:integration": "node --test tests/integration/*.test.js",
     "test:spelling": "cspell . .github",
     "test:unit": "node --test tests/unit/*.test.js"
   },
@@ -59,11 +60,12 @@
     "@stylistic/eslint-plugin": "^5.10.0",
     "commit-and-tag-version": "^13.2.1",
     "cspell": "^10.3.6",
-    "eslint": "^10.11.0",
+    "eslint": "^10.12.0",
     "eslint-plugin-import-x": "^4.17.1",
-    "eslint-plugin-jsdoc": "^65.0.0",
-    "globals": "^17.12.0",
+    "eslint-plugin-jsdoc": "^65.1.0",
+    "globals": "^17.13.0",
     "lint-staged": "^17.6.0",
+    "playwright": "^1.63.0",
     "prettier": "^3.9.9",
     "simple-git-hooks": "^2.14.0"
   },

@@ -1,11 +1,19 @@
-body {
+body:has(.mmm-carousel-container) {
   overflow: visible;
   margin-bottom: 0;
   height: calc(100% - 60px);
 }
 
-.region.bottom {
+.region.bottom:has(.mmm-carousel-container) {
   bottom: 60px;
+}
+
+.module.MMM-Carousel {
+  margin-bottom: 0;
+}
+
+.region.bottom .module.MMM-Carousel {
+  margin-top: 0;
 }
 
 .zoom50 {
@@ -52,145 +60,143 @@ body {
   width: 100%;
   left: 0;
   z-index: 50;
-}
 
-/* Next and Previous arrow */
-.control {
-  position: absolute;
-  bottom: 0;
-  width: 150px;
-  height: 150px;
-  z-index: 55;
-}
+  /* Next and Previous arrows */
+  .control {
+    position: absolute;
+    bottom: 0;
+    width: 150px;
+    height: 150px;
+    z-index: 55;
 
-.control label {
-  z-index: 0;
-  display: none;
-  text-align: center;
-  line-height: 50px;
-  position: relative;
-  width: 50px;
-  height: 50px;
-  left: 33%; /* Center in .control div: this.width / .control.width; */
-  top: 33%; /* Center in .control div: this.height / .control.height;; */
-  font-size: 50px;
-  color: #fff;
-  cursor: pointer !important;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
+    label {
+      z-index: 0;
+      display: none;
+      text-align: center;
+      line-height: 50px;
+      position: relative;
+      width: 50px;
+      height: 50px;
+      left: 33%; /* Center in .control div: this.width / .control.width; */
+      top: 33%; /* Center in .control div: this.height / .control.height; */
+      font-size: 50px;
+      color: #fff;
+      cursor: pointer !important;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
-/*
- * Carousel navigation arrows
- */
-.carousel-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  background: rgb(255 255 255 / 100%);
-  border-radius: 50%;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
-  position: relative;
-}
+    &:hover {
+      cursor: pointer !important;
 
-.carousel-arrow::before {
-  content: "";
-  display: block;
-  width: var(--arrow-size);
-  height: var(--arrow-size);
-  border-top: var(--arrow-thickness) solid var(--arrow-color);
-  border-right: var(--arrow-thickness) solid var(--arrow-color);
-  border-radius: 5px;
-  position: absolute;
-}
+      .carousel-arrow {
+        transform: scale(1.1);
+        background: rgb(255 255 255 / 80%);
+      }
 
-.carousel-arrow-right::before {
-  transform: rotate(45deg);
-  left: var(--arrow-offset);
-}
+      .mmm-carousel-available {
+        opacity: var(--control-opacity-hover) !important;
+        cursor: pointer !important;
+      }
+    }
 
-.carousel-arrow-left::before {
-  transform: rotate(-135deg);
-  right: var(--arrow-offset);
-}
+    .mmm-carousel-available:hover {
+      opacity: var(--control-opacity-active) !important;
+    }
+  }
 
-.control:hover .carousel-arrow {
-  transform: scale(1.1);
-  background: rgb(255 255 255 / 80%);
-}
+  /* Carousel navigation arrows */
+  .carousel-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgb(255 255 255 / 100%);
+    border-radius: 50%;
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease;
+    position: relative;
 
-/* Available controls - visible with default opacity */
-.mmm-carousel-available {
-  display: block !important;
-  z-index: 100 !important;
-  opacity: var(--control-opacity-default) !important;
-}
+    &::before {
+      content: "";
+      display: block;
+      width: var(--arrow-size);
+      height: var(--arrow-size);
+      border-top: var(--arrow-thickness) solid var(--arrow-color);
+      border-right: var(--arrow-thickness) solid var(--arrow-color);
+      border-radius: 5px;
+      position: absolute;
+    }
+  }
 
-/* Hover states for available controls */
-.control:hover .mmm-carousel-available {
-  opacity: var(--control-opacity-hover) !important;
-  cursor: pointer !important;
-}
+  .carousel-arrow-right::before {
+    transform: rotate(45deg);
+    left: var(--arrow-offset);
+  }
 
-.control .mmm-carousel-available:hover {
-  opacity: var(--control-opacity-active) !important;
-}
+  .carousel-arrow-left::before {
+    transform: rotate(-135deg);
+    right: var(--arrow-offset);
+  }
 
-.next {
-  right: -60px;
-}
+  /* Available controls - visible with default opacity */
+  .mmm-carousel-available {
+    display: block !important;
+    z-index: 100 !important;
+    opacity: var(--control-opacity-default) !important;
+  }
 
-.previous {
-  left: -60px;
-}
+  .next {
+    right: -60px;
+  }
 
-/* Slider Pagger */
-.slider-pagination {
-  position: absolute;
-  bottom: 15px;
-  width: 100%;
-  left: 0;
-  text-align: center;
-  z-index: 1000;
-}
+  .previous {
+    left: -60px;
+  }
 
-.slider-pagination label {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-  background: rgb(255 255 255 / 20%);
-  margin: 0 2px;
-  border: solid 1px rgb(255 255 255 / 40%);
-  cursor: pointer !important;
-}
+  /* Slider pagination */
+  .slider-pagination {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    z-index: 1000;
 
-/* Show button when you hover near */
-.control:hover {
-  cursor: pointer !important;
-}
+    label {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      background: rgb(255 255 255 / 20%);
+      margin: 0 2px;
+      border: solid 1px rgb(255 255 255 / 40%);
+      cursor: pointer !important;
+    }
+  }
 
-.mmm-carousel-current-page {
-  background: rgb(255 255 255 / 100%) !important;
-}
+  .mmm-carousel-current-page {
+    background: rgb(255 255 255 / 100%) !important;
+  }
 
-.mmm-carousel-paused .slider-pagination label {
-  border-color: black;
-  background: rgb(0 0 0 / 20%);
-}
+  &.mmm-carousel-paused {
+    .slider-pagination label {
+      border-color: black;
+      background: rgb(0 0 0 / 20%);
+    }
 
-.mmm-carousel-paused .mmm-carousel-current-page {
-  background: rgb(0 0 0 / 100%) !important;
-}
+    .mmm-carousel-current-page {
+      background: rgb(0 0 0 / 100%) !important;
+    }
+  }
 
-/* Hide actual radio buttons */
-.slide-radio {
-  position: absolute;
-  bottom: -200px;
-  left: -200px;
-  visibility: hidden;
+  /* Hide actual radio buttons */
+  .slide-radio {
+    position: absolute;
+    bottom: -200px;
+    left: -200px;
+    visibility: hidden;
+  }
 }
