@@ -230,7 +230,7 @@ Passing a config similar to the following shows a large clock on the first slide
     },
 ```
 
-**Note:** The `zoomXXX` classes are available to change the scaling of a module. Using the methods above, you can pass `classes:'zoom%%%'` to scale a single module to a larger or smaller size. Supported zooms are 070%, 080%, 090%, 125%, 150%, 175%, and 200%. Pass `classes:''` for 100%. Edit your `'css/custom.css'` file to add additional classes.
+**Note:** Use one of the supported zoom classes in a slide's `classes` property to scale a module: `zoom50` (50%), `zoom75` (75%), `zoom125` (125%), `zoom150` (150%), `zoom175` (175%), or `zoom200` (200%). Omit the zoom class for 100%. Add other scaling classes in `css/custom.css`.
 
 ## Navigation from other modules
 
