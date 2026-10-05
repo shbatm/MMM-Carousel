@@ -40,6 +40,7 @@
     "prepare": "simple-git-hooks || true",
     "release": "commit-and-tag-version",
     "test": "node --run test:unit && node --run lint && node --run test:spelling",
+    "test:integration": "node --test tests/integration/*.test.js",
     "test:spelling": "cspell . .github",
     "test:unit": "node --test tests/unit/*.test.js"
   },
@@ -64,6 +65,7 @@
     "eslint-plugin-jsdoc": "^65.1.0",
     "globals": "^17.13.0",
     "lint-staged": "^17.6.0",
+    "playwright": "^1.63.0",
     "prettier": "^3.9.9",
     "simple-git-hooks": "^2.14.0"
   },
