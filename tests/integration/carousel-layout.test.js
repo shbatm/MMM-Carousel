@@ -61,9 +61,11 @@ const setupPage = async () => {
 };
 
 const appendCarousel = (page, {id, config, targetSelector, beforeSelector = null}) => page.evaluate((options) => {
-  const content = window.carouselDefinition.getDom.call({
+  const definition = window.carouselDefinition;
+  const content = definition.getDom.call({
     config: options.config,
-    makeOnChangeHandler: () => () => null
+    makeOnChangeHandler: () => () => null,
+    createPageControls: definition.createPageControls
   });
   const carousel = document.createElement("div");
   carousel.id = options.id;
@@ -128,6 +130,90 @@ test("only visible Carousel controls change the mirror layout", async () => {
 
     assert.equal(layoutWithControls.bodyHeight - coreLayout.bodyHeight, 60);
     assert.equal(layoutWithControls.bottomRegionOffset, 60);
+  } finally {
+    await page.close();
+  }
+});
+
+const getSelectorScopeStyles = (page) => page.evaluate(() => {
+  const externalControl = document.createElement("div");
+  externalControl.className = "control";
+  const externalLabel = document.createElement("label");
+  externalControl.appendChild(externalLabel);
+  const externalNext = document.createElement("div");
+  externalNext.className = "next";
+  const externalPrevious = document.createElement("div");
+  externalPrevious.className = "previous";
+  const externalPagination = document.createElement("div");
+  externalPagination.className = "slider-pagination";
+  const externalRadio = document.createElement("input");
+  externalRadio.className = "slide-radio";
+  document.body.append(externalControl, externalNext, externalPrevious, externalPagination, externalRadio);
+
+  const container = document.querySelector("#carousel-controls .mmm-carousel-container");
+  const carouselControl = container.querySelector(".control");
+  const carouselNext = container.querySelector(".next");
+  const carouselPrevious = container.querySelector(".previous");
+  const carouselPagination = container.querySelector(".slider-pagination");
+  const carouselRadio = container.querySelector(".slide-radio");
+
+  return {
+    external: [
+      getComputedStyle(externalControl).position,
+      getComputedStyle(externalLabel).display,
+      getComputedStyle(externalNext).right,
+      getComputedStyle(externalPrevious).left,
+      getComputedStyle(externalPagination).position,
+      getComputedStyle(externalRadio).position,
+      getComputedStyle(externalRadio).visibility
+    ],
+    carousel: [
+      getComputedStyle(carouselControl).position,
+      getComputedStyle(carouselControl.querySelector("label")).display,
+      getComputedStyle(carouselNext).right,
+      getComputedStyle(carouselPrevious).left,
+      getComputedStyle(carouselPagination).position,
+      getComputedStyle(carouselRadio).position,
+      getComputedStyle(carouselRadio).visibility
+    ]
+  };
+});
+
+test("Carousel UI selectors stay scoped to the carousel container", async () => {
+  const {page} = await setupPage();
+
+  try {
+    await appendCarousel(page, {
+      id: "carousel-controls",
+      config: {
+        mode: "slides",
+        showPageIndicators: true,
+        showPageControls: true,
+        slides: {first: [],
+          second: []}
+      },
+      targetSelector: ".region.top.left .container"
+    });
+    const styles = await getSelectorScopeStyles(page);
+
+    assert.deepEqual(styles.external, [
+      "static",
+      "inline",
+      "auto",
+      "auto",
+      "static",
+      "static",
+      "visible"
+    ]);
+    assert.deepEqual(styles.carousel, [
+      "absolute",
+      "none",
+      "-60px",
+      "-60px",
+      "absolute",
+      "absolute",
+      "hidden"
+    ]);
   } finally {
     await page.close();
   }
