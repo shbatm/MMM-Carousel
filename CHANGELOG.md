@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.7](https://github.com/shbatm/MMM-Carousel/compare/v0.7.6...v0.7.7) (2026-10-05)
+
+### Bug Fixes
+
+* avoid empty module spacing ([a461174](https://github.com/shbatm/MMM-Carousel/commit/a4611746bdb8594dee8fc464b117a14044a906b1))
+* prevent UI styles leaking to other modules ([4c3e6fc](https://github.com/shbatm/MMM-Carousel/commit/4c3e6fcd5f2b2d3c03db6e73d0d3648505619bd5))
+
+### Documentation
+
+* align zoom docs with CSS ([2499aea](https://github.com/shbatm/MMM-Carousel/commit/2499aea76fbad996554836576529895b2ecd372d))
+
+### Tests
+
+* reproduce empty module spacing ([6991561](https://github.com/shbatm/MMM-Carousel/commit/6991561af746b6901092485e7989a8f968f95f45))
+
+### Chores
+
+* update devDependencies ([094d8f4](https://github.com/shbatm/MMM-Carousel/commit/094d8f425e89a89e6e755a9a6bc0f97ccf5e095e))
+
 ## [0.7.6](https://github.com/shbatm/MMM-Carousel/compare/v0.7.5...v0.7.6) (2026-09-29)
 
 ### Features
